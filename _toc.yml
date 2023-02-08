@@ -1,0 +1,10 @@
+# Table of contents
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: index
+chapters:
+- file: lessons/motivation_differential_equations
+- file: lessons/numerical_solutions
+- file: lessons/parameter_estimation
+- file: lessons/system_of_equations
