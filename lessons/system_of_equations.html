@@ -3,11 +3,11 @@
 <!DOCTYPE html>
 
 
-<html >
+<html lang="en" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>System of Equations &#8212; A Literate Programming approach for motivating and teaching machine learning approaches to solve differential equations</title>
   
@@ -44,6 +44,7 @@
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/clipboard.min.js"></script>
     <script src="../_static/copybutton.js"></script>
@@ -68,7 +69,7 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="search" title="Search" href="../search.html" />
     <link rel="prev" title="Parameter Estimation" href="parameter_estimation.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="docsearch:language" content="None"/>
+  <meta name="docsearch:language" content="en"/>
   </head>
   
   
@@ -408,7 +409,7 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="system-of-equations">
-<h1>System of Equations<a class="headerlink" href="#system-of-equations" title="Permalink to this headline">#</a></h1>
+<h1>System of Equations<a class="headerlink" href="#system-of-equations" title="Permalink to this heading">#</a></h1>
 <p>Let’s motivate this section with  the <strong>Lotka-Volterra equations</strong>, also known as the predator-prey equations, are a pair of first-order nonlinear differential equations, frequently used to describe the dynamics of biological systems in which two species interact. The populations change through time according to the pair of equations:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
@@ -424,7 +425,7 @@ document.write(`
 <li><p><span class="math notranslate nohighlight">\(\alpha\)</span>, <span class="math notranslate nohighlight">\(\beta\)</span>, <span class="math notranslate nohighlight">\(\gamma\)</span> and <span class="math notranslate nohighlight">\(\delta\)</span> are positive real parameters describing the interaction of the two species.</p></li>
 </ul>
 <section id="physics-informed-neural-networks">
-<h2>Physics-Informed Neural Networks<a class="headerlink" href="#physics-informed-neural-networks" title="Permalink to this headline">#</a></h2>
+<h2>Physics-Informed Neural Networks<a class="headerlink" href="#physics-informed-neural-networks" title="Permalink to this heading">#</a></h2>
 <p>For years mathematicians and physicists are trying to model the world with differential equations. However, since the advent of techniques such as machine learning, neural networks and deep learning together with greater computing power, community has speculated that we could learn automatically (algorithms) anything with a enough amount of data. However, it seems this is not really true.</p>
 <p>Philosophical Question: Could have a <em>machine</em> discovered Newton’s laws?</p>
 <p>In 2019, Raissi, Perdikaris and Karniadakis introduced Physics-Informed Neural Networks (PINNs), neural networks that are trained to solve supervised learning tasks while respecting any given law of physics described by general nonlinear partial differential equations (<a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0021999118307125">source</a>). PINNs are nowadays used to solve PDEs, fractional equations, and integral-differential equations.</p>
@@ -471,7 +472,7 @@ $<span class="math notranslate nohighlight">\(
 <p><a class="reference external" href="https://link.springer.com/article/10.1007/s10915-022-01939-z">Source</a></p>
 </section>
 <section id="pinns-solving-odes">
-<h2>PINNs solving ODEs<a class="headerlink" href="#pinns-solving-odes" title="Permalink to this headline">#</a></h2>
+<h2>PINNs solving ODEs<a class="headerlink" href="#pinns-solving-odes" title="Permalink to this heading">#</a></h2>
 <p>For our Lotka-Volterra system the solution <span class="math notranslate nohighlight">\(u\)</span> will be a vector such that
 $<span class="math notranslate nohighlight">\(
 u(t) = (x(t), y(t))^\top
@@ -481,8 +482,15 @@ and there are not boundary conditions, only initial conditions.</p>
 <p><img alt="lotka_volterra_pinn" src="../_images/lotka_volterra_pinn.png" /></p>
 </section>
 <section id="import-packages">
-<h2>Import packages<a class="headerlink" href="#import-packages" title="Permalink to this headline">#</a></h2>
+<h2>Import packages<a class="headerlink" href="#import-packages" title="Permalink to this heading">#</a></h2>
 <p>The most important package is <code class="docutils literal notranslate"><span class="pre">deepxde</span></code>, which allows us to implement Physic-Informed Neural Networs approaches with a few lines of code. We will need <code class="docutils literal notranslate"><span class="pre">numpy</span></code> for array operations, <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> for visualizations and <code class="docutils literal notranslate"><span class="pre">scipy</span></code> for getting the real solution (which is not always possible, if not we would only use this approach).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># !pip install deepxde  # Run this line if you are in Google Colab</span>
+</pre></div>
+</div>
+</div>
+</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -498,66 +506,40 @@ and there are not boundary conditions, only initial conditions.</p>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Using backend: tensorflow.compat.v1
 </pre></div>
 </div>
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">3</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="ne">----&gt; </span><span class="mi">3</span> <span class="kn">import</span> <span class="nn">deepxde</span> <span class="k">as</span> <span class="nn">dde</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">solve_ivp</span>
-<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="kn">from</span> <span class="nn">deepxde.backend</span> <span class="kn">import</span> <span class="n">tf</span>
-
-<span class="n">File</span> <span class="o">~/</span><span class="n">mambaforge</span><span class="o">/</span><span class="n">envs</span><span class="o">/</span><span class="n">nc</span><span class="o">-</span><span class="n">book</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="mf">.11</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">deepxde</span><span class="o">/</span><span class="fm">__init__</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">17</span>
-<span class="g g-Whitespace">     </span><span class="mi">14</span> <span class="kn">from</span> <span class="nn">.__about__</span> <span class="kn">import</span> <span class="n">__version__</span>
-<span class="g g-Whitespace">     </span><span class="mi">16</span> <span class="c1"># Should import backend before importing anything else</span>
-<span class="ne">---&gt; </span><span class="mi">17</span> <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">backend</span>
-<span class="g g-Whitespace">     </span><span class="mi">19</span> <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">callbacks</span>
-<span class="g g-Whitespace">     </span><span class="mi">20</span> <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">data</span>
-
-<span class="n">File</span> <span class="o">~/</span><span class="n">mambaforge</span><span class="o">/</span><span class="n">envs</span><span class="o">/</span><span class="n">nc</span><span class="o">-</span><span class="n">book</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="mf">.11</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">deepxde</span><span class="o">/</span><span class="n">backend</span><span class="o">/</span><span class="fm">__init__</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">100</span>
-<span class="g g-Whitespace">     </span><span class="mi">96</span>     <span class="n">set_default_backend</span><span class="p">(</span><span class="s2">&quot;tensorflow.compat.v1&quot;</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">97</span>     <span class="k">return</span> <span class="s2">&quot;tensorflow.compat.v1&quot;</span>
-<span class="ne">--&gt; </span><span class="mi">100</span> <span class="n">load_backend</span><span class="p">(</span><span class="n">get_preferred_backend</span><span class="p">())</span>
-<span class="g g-Whitespace">    </span><span class="mi">103</span> <span class="k">def</span> <span class="nf">is_enabled</span><span class="p">(</span><span class="n">api</span><span class="p">):</span>
-<span class="g g-Whitespace">    </span><span class="mi">104</span><span class="w">     </span><span class="sd">&quot;&quot;&quot;Return true if the api is enabled by the current backend.</span>
-<span class="g g-Whitespace">    </span><span class="mi">105</span><span class="sd"> </span>
-<span class="g g-Whitespace">    </span><span class="mi">106</span><span class="sd">     Args:</span>
-<span class="sd">   (...)</span>
-<span class="g g-Whitespace">    </span><span class="mi">110</span><span class="sd">         bool: ``True`` if the API is enabled by the current backend.</span>
-<span class="g g-Whitespace">    </span><span class="mi">111</span><span class="sd">     &quot;&quot;&quot;</span>
-
-<span class="nn">File ~/mambaforge/envs/nc-book/lib/python3.11/site-packages/deepxde/backend/__init__.py:36,</span> in <span class="ni">load_backend</span><span class="nt">(mod_name)</span>
-<span class="g g-Whitespace">     </span><span class="mi">33</span>     <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Unsupported backend: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">mod_name</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">35</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Using backend: </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">mod_name</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="ne">---&gt; </span><span class="mi">36</span> <span class="n">mod</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="s2">&quot;.</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">mod_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">),</span> <span class="vm">__name__</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">37</span> <span class="n">thismod</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="vm">__name__</span><span class="p">]</span>
-<span class="g g-Whitespace">     </span><span class="mi">38</span> <span class="c1"># log backend name</span>
-
-<span class="nn">File ~/mambaforge/envs/nc-book/lib/python3.11/importlib/__init__.py:126,</span> in <span class="ni">import_module</span><span class="nt">(name, package)</span>
-<span class="g g-Whitespace">    </span><span class="mi">124</span>             <span class="k">break</span>
-<span class="g g-Whitespace">    </span><span class="mi">125</span>         <span class="n">level</span> <span class="o">+=</span> <span class="mi">1</span>
-<span class="ne">--&gt; </span><span class="mi">126</span> <span class="k">return</span> <span class="n">_bootstrap</span><span class="o">.</span><span class="n">_gcd_import</span><span class="p">(</span><span class="n">name</span><span class="p">[</span><span class="n">level</span><span class="p">:],</span> <span class="n">package</span><span class="p">,</span> <span class="n">level</span><span class="p">)</span>
-
-<span class="n">File</span> <span class="o">~/</span><span class="n">mambaforge</span><span class="o">/</span><span class="n">envs</span><span class="o">/</span><span class="n">nc</span><span class="o">-</span><span class="n">book</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="mf">.11</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">deepxde</span><span class="o">/</span><span class="n">backend</span><span class="o">/</span><span class="n">tensorflow_compat_v1</span><span class="o">/</span><span class="fm">__init__</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">5</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="kn">import</span> <span class="nn">os</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;TF_FORCE_GPU_ALLOW_GROWTH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;true&quot;</span>
-<span class="ne">----&gt; </span><span class="mi">5</span> <span class="kn">from</span> <span class="nn">.tensor</span> <span class="kn">import</span> <span class="o">*</span>  <span class="c1"># pylint: disable=redefined-builtin</span>
-
-<span class="n">File</span> <span class="o">~/</span><span class="n">mambaforge</span><span class="o">/</span><span class="n">envs</span><span class="o">/</span><span class="n">nc</span><span class="o">-</span><span class="n">book</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="mf">.11</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">deepxde</span><span class="o">/</span><span class="n">backend</span><span class="o">/</span><span class="n">tensorflow_compat_v1</span><span class="o">/</span><span class="n">tensor</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">4</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span><span class="w"> </span><span class="sd">&quot;&quot;&quot;tensorflow.compat.v1 backend implementation&quot;&quot;&quot;</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="kn">from</span> <span class="nn">packaging.version</span> <span class="kn">import</span> <span class="n">Version</span>
-<span class="ne">----&gt; </span><span class="mi">4</span> <span class="kn">import</span> <span class="nn">tensorflow.compat.v1</span> <span class="k">as</span> <span class="nn">tf</span>
-<span class="g g-Whitespace">      </span><span class="mi">7</span> <span class="k">if</span> <span class="n">Version</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">Version</span><span class="p">(</span><span class="s2">&quot;2.7.0&quot;</span><span class="p">):</span>
-<span class="g g-Whitespace">      </span><span class="mi">8</span>     <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;DeepXDE requires TensorFlow&gt;=2.7.0.&quot;</span><span class="p">)</span>
-
-<span class="ne">ModuleNotFoundError</span>: No module named &#39;tensorflow&#39;
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-09 13:06:48.147710: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F AVX512_VNNI AVX512_BF16 FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2023-03-09 13:06:48.218798: I tensorflow/core/util/port.cc:104] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-09 13:06:48.541793: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#39;libnvinfer.so.7&#39;; dlerror: libnvinfer.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: :/home/alonsolml/mambaforge/envs/nc-book/lib/:/home/alonsolml/mambaforge/envs/nc-book/lib/
+2023-03-09 13:06:48.543400: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#39;libnvinfer_plugin.so.7&#39;; dlerror: libnvinfer_plugin.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: :/home/alonsolml/mambaforge/envs/nc-book/lib/:/home/alonsolml/mambaforge/envs/nc-book/lib/
+2023-03-09 13:06:48.543409: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Cannot dlopen some TensorRT libraries. If you would like to use Nvidia GPU with TensorRT, please make sure the missing libraries mentioned above are installed properly.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:tensorflow:From /home/alonsolml/mambaforge/envs/nc-book/lib/python3.10/site-packages/tensorflow/python/compat/v2_compat.py:107: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Enable just-in-time compilation with XLA.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-09 13:06:48.995880: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+Your kernel may have been built without NUMA support.
+2023-03-09 13:06:49.008482: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+Your kernel may have been built without NUMA support.
+2023-03-09 13:06:49.008512: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+Your kernel may have been built without NUMA support.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:tensorflow:From /home/alonsolml/mambaforge/envs/nc-book/lib/python3.10/site-packages/deepxde/nn/initializers.py:118: The name tf.keras.initializers.he_normal is deprecated. Please use tf.compat.v1.keras.initializers.he_normal instead.
 </pre></div>
 </div>
 </div>
 </div>
 </section>
 <section id="ode-residuals">
-<h2>ODE Residuals<a class="headerlink" href="#ode-residuals" title="Permalink to this headline">#</a></h2>
+<h2>ODE Residuals<a class="headerlink" href="#ode-residuals" title="Permalink to this heading">#</a></h2>
 <p>Since we are trying to embed the physics onto the neural networks we need to define</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -589,7 +571,7 @@ and there are not boundary conditions, only initial conditions.</p>
 <p>Here <code class="docutils literal notranslate"><span class="pre">t</span></code> is the indepent variable and <code class="docutils literal notranslate"><span class="pre">Y</span></code> is an array with two columns (since our system considers two equations). To define the first derivative is as easy as using <code class="docutils literal notranslate"><span class="pre">dde.grad.jacobian</span></code>, just be sure about the component <code class="docutils literal notranslate"><span class="pre">i</span></code>, in this case we decided <code class="docutils literal notranslate"><span class="pre">i=0</span></code> corresponds to the variable <span class="math notranslate nohighlight">\(x(t)\)</span> and <code class="docutils literal notranslate"><span class="pre">i=1</span></code> to <span class="math notranslate nohighlight">\(y(t)\)</span>.</p>
 </section>
 <section id="initial-conditions">
-<h2>Initial conditions<a class="headerlink" href="#initial-conditions" title="Permalink to this headline">#</a></h2>
+<h2>Initial conditions<a class="headerlink" href="#initial-conditions" title="Permalink to this heading">#</a></h2>
 <p>It is important to decide a time invertal where we will working on. As an example let’s consider between <span class="math notranslate nohighlight">\(t=0\)</span> and <span class="math notranslate nohighlight">\(t=1\)</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -636,7 +618,7 @@ and there are not boundary conditions, only initial conditions.</p>
 </div>
 </section>
 <section id="data-object">
-<h2>Data object<a class="headerlink" href="#data-object" title="Permalink to this headline">#</a></h2>
+<h2>Data object<a class="headerlink" href="#data-object" title="Permalink to this heading">#</a></h2>
 <p>Everything related to the differential equations and initial conditions has to be inside a new object <code class="docutils literal notranslate"><span class="pre">dde.data.PDE</span></code> (do not worry, it also consider systems of ordinary differential equations).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -654,7 +636,7 @@ and there are not boundary conditions, only initial conditions.</p>
 <p>In order to test our model we need more points, we considered 512 points inside our domain with <code class="docutils literal notranslate"><span class="pre">num_domain=512</span></code>. Finally, since we are working on a time domain there are only two points in its boundary (<code class="docutils literal notranslate"><span class="pre">num_boundary=2</span></code>).</p>
 </section>
 <section id="neural-network">
-<h2>Neural Network<a class="headerlink" href="#neural-network" title="Permalink to this headline">#</a></h2>
+<h2>Neural Network<a class="headerlink" href="#neural-network" title="Permalink to this heading">#</a></h2>
 <p>It is time for choosing a neural network architecture. For simplicity, we will use a Fully-connected neural network (`dde.nn.FNN’). The most important things are:</p>
 <ul class="simple">
 <li><p>Input layer (the first one) needs only one node/neuron since our indepent variable is only time <span class="math notranslate nohighlight">\(t\)</span>.</p></li>
@@ -674,7 +656,7 @@ and there are not boundary conditions, only initial conditions.</p>
 </div>
 </section>
 <section id="model">
-<h2>Model<a class="headerlink" href="#model" title="Permalink to this headline">#</a></h2>
+<h2>Model<a class="headerlink" href="#model" title="Permalink to this heading">#</a></h2>
 <p>The library we are working with needs put everything together in a new object, but it is just one line of code.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -685,7 +667,7 @@ and there are not boundary conditions, only initial conditions.</p>
 </div>
 </section>
 <section id="training">
-<h2>Training<a class="headerlink" href="#training" title="Permalink to this headline">#</a></h2>
+<h2>Training<a class="headerlink" href="#training" title="Permalink to this heading">#</a></h2>
 <p>For training we will go with an Adam optimizer (a very popular one nowadays) and a learning rate of 0.001 (smaller learning rates may give you better results but it will take many more iterations).</p>
 <p>Just for simplicity we will take 50000 iterations, but another rule of thumb it is that as you increase the number of iterations the loss value should decrease as well.</p>
 <div class="cell docutils container">
@@ -698,116 +680,215 @@ and there are not boundary conditions, only initial conditions.</p>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Compiling model...
 Building feed-forward neural network...
-&#39;build&#39; took 0.040565 s
+&#39;build&#39; took 0.033609 s
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/alonsolml/mambaforge/envs/pinn/lib/python3.10/site-packages/deepxde/nn/tensorflow_compat_v1/fnn.py:103: UserWarning: `tf.layers.dense` is deprecated and will be removed in a future version. Please use `tf.keras.layers.Dense` instead.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/alonsolml/mambaforge/envs/nc-book/lib/python3.10/site-packages/deepxde/nn/tensorflow_compat_v1/fnn.py:103: UserWarning: `tf.layers.dense` is deprecated and will be removed in a future version. Please use `tf.keras.layers.Dense` instead.
   return tf.layers.dense(
-2023-03-08 23:52:21.664921: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F AVX512_VNNI AVX512_BF16 FMA
+2023-03-09 13:06:49.551740: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F AVX512_VNNI AVX512_BF16 FMA
 To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
-2023-03-08 23:52:21.666828: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+2023-03-09 13:06:49.552932: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
-2023-03-08 23:52:21.666901: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+2023-03-09 13:06:49.552977: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
-2023-03-08 23:52:21.666928: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+2023-03-09 13:06:49.553002: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
-2023-03-08 23:52:22.883093: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
-Your kernel may have been built without NUMA support.
-2023-03-08 23:52:22.883340: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
-Your kernel may have been built without NUMA support.
-2023-03-08 23:52:22.883350: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1700] Could not identify NUMA node of platform GPU id 0, defaulting to 0.  Your kernel may not have been built with NUMA support.
-2023-03-08 23:52:22.883420: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
-Your kernel may have been built without NUMA support.
-2023-03-08 23:52:22.883517: W tensorflow/core/common_runtime/gpu/gpu_bfc_allocator.cc:42] Overriding orig_value setting because the TF_FORCE_GPU_ALLOW_GROWTH environment variable is set. Original config value was 0.
-2023-03-08 23:52:22.883618: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1613] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 7369 MB memory:  -&gt; device: 0, name: NVIDIA GeForce RTX 3080, pci bus id: 0000:01:00.0, compute capability: 8.6
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;compile&#39; took 1.516456 s
-
-Initializing variables...
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-09 13:06:49.932081: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+Your kernel may have been built without NUMA support.
+2023-03-09 13:06:49.932149: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+Your kernel may have been built without NUMA support.
+2023-03-09 13:06:49.932155: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1700] Could not identify NUMA node of platform GPU id 0, defaulting to 0.  Your kernel may not have been built with NUMA support.
+2023-03-09 13:06:49.932176: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+Your kernel may have been built without NUMA support.
+2023-03-09 13:06:49.932185: W tensorflow/core/common_runtime/gpu/gpu_bfc_allocator.cc:42] Overriding orig_value setting because the TF_FORCE_GPU_ALLOW_GROWTH environment variable is set. Original config value was 0.
+2023-03-09 13:06:49.932204: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1613] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 7369 MB memory:  -&gt; device: 0, name: NVIDIA GeForce RTX 3080, pci bus id: 0000:01:00.0, compute capability: 8.6
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;compile&#39; took 0.666342 s
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Initializing variables...
 Training model...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-08 23:52:23.153795: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:357] MLIR V1 optimization pass is not enabled
-2023-03-08 23:52:23.245816: I tensorflow/compiler/xla/service/service.cc:173] XLA service 0x7fd4ac00dc90 initialized for platform CUDA (this does not guarantee that XLA will be used). Devices:
-2023-03-08 23:52:23.245850: I tensorflow/compiler/xla/service/service.cc:181]   StreamExecutor device (0): NVIDIA GeForce RTX 3080, Compute Capability 8.6
-2023-03-08 23:52:23.261003: I tensorflow/compiler/mlir/tensorflow/utils/dump_mlir_util.cc:268] disabling MLIR crash reproducer, set env var `MLIR_CRASH_REPRODUCER_DIRECTORY` to enable.
-2023-03-08 23:52:23.546447: I tensorflow/tsl/platform/default/subprocess.cc:304] Start cannot spawn child process: Permission denied
-2023-03-08 23:52:23.651611: I tensorflow/compiler/jit/xla_compilation_cache.cc:477] Compiled cluster using XLA!  This line is logged at most once for the lifetime of the process.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-09 13:06:50.190980: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:357] MLIR V1 optimization pass is not enabled
+2023-03-09 13:06:50.261676: I tensorflow/compiler/xla/service/service.cc:173] XLA service 0x7fbf04004960 initialized for platform CUDA (this does not guarantee that XLA will be used). Devices:
+2023-03-09 13:06:50.261708: I tensorflow/compiler/xla/service/service.cc:181]   StreamExecutor device (0): NVIDIA GeForce RTX 3080, Compute Capability 8.6
+2023-03-09 13:06:50.265480: I tensorflow/compiler/mlir/tensorflow/utils/dump_mlir_util.cc:268] disabling MLIR crash reproducer, set env var `MLIR_CRASH_REPRODUCER_DIRECTORY` to enable.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-09 13:06:50.407865: I tensorflow/tsl/platform/default/subprocess.cc:304] Start cannot spawn child process: Permission denied
+2023-03-09 13:06:50.471541: I tensorflow/compiler/jit/xla_compilation_cache.cc:477] Compiled cluster using XLA!  This line is logged at most once for the lifetime of the process.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Step      Train loss                                  Test loss                                   Test metric
-0         [2.38e-01, 6.60e-01, 1.44e+00, 6.40e-01]    [2.38e-01, 6.60e-01, 1.44e+00, 6.40e-01]    []  
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-08 23:52:24.295353: I tensorflow/compiler/xla/stream_executor/cuda/cuda_blas.cc:630] TensorFloat-32 will be used for the matrix multiplication. This will only be logged once.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0         [3.14e-01, 1.88e-01, 1.44e+00, 6.40e-01]    [3.14e-01, 1.88e-01, 1.44e+00, 6.40e-01]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1000      [6.37e-04, 1.01e-03, 2.19e-06, 1.69e-05]    [6.37e-04, 1.01e-03, 2.19e-06, 1.69e-05]    []  
-2000      [3.23e-04, 7.10e-04, 6.89e-07, 3.31e-06]    [3.23e-04, 7.10e-04, 6.89e-07, 3.31e-06]    []  
-3000      [2.13e-04, 8.49e-04, 1.82e-05, 5.48e-06]    [2.13e-04, 8.49e-04, 1.82e-05, 5.48e-06]    []  
-4000      [5.64e-04, 5.86e-04, 2.10e-05, 1.32e-06]    [5.64e-04, 5.86e-04, 2.10e-05, 1.32e-06]    []  
-5000      [3.61e-05, 6.59e-05, 4.58e-07, 4.43e-07]    [3.61e-05, 6.59e-05, 4.58e-07, 4.43e-07]    []  
-6000      [1.22e-05, 8.46e-06, 1.27e-07, 6.34e-08]    [1.22e-05, 8.46e-06, 1.27e-07, 6.34e-08]    []  
-7000      [8.38e-06, 1.06e-05, 6.62e-06, 3.26e-07]    [8.38e-06, 1.06e-05, 6.62e-06, 3.26e-07]    []  
-8000      [6.72e-06, 5.98e-06, 1.21e-06, 5.01e-09]    [6.72e-06, 5.98e-06, 1.21e-06, 5.01e-09]    []  
-9000      [2.94e-06, 6.62e-07, 3.00e-07, 4.81e-07]    [2.94e-06, 6.62e-07, 3.00e-07, 4.81e-07]    []  
-10000     [6.34e-05, 7.44e-06, 1.65e-08, 3.67e-06]    [6.34e-05, 7.44e-06, 1.65e-08, 3.67e-06]    []  
-11000     [1.39e-06, 3.47e-07, 1.38e-08, 1.00e-07]    [1.39e-06, 3.47e-07, 1.38e-08, 1.00e-07]    []  
-12000     [1.78e-06, 1.52e-06, 1.30e-06, 6.57e-11]    [1.78e-06, 1.52e-06, 1.30e-06, 6.57e-11]    []  
-13000     [1.81e-04, 1.05e-04, 1.81e-08, 1.45e-05]    [1.81e-04, 1.05e-04, 1.81e-08, 1.45e-05]    []  
-14000     [8.76e-06, 1.37e-06, 7.18e-06, 1.21e-06]    [8.76e-06, 1.37e-06, 7.18e-06, 1.21e-06]    []  
-15000     [1.82e-06, 1.98e-06, 2.28e-06, 8.07e-09]    [1.82e-06, 1.98e-06, 2.28e-06, 8.07e-09]    []  
-16000     [4.26e-06, 3.33e-06, 6.92e-07, 2.12e-07]    [4.26e-06, 3.33e-06, 6.92e-07, 2.12e-07]    []  
-17000     [1.71e-06, 8.94e-07, 1.64e-07, 4.69e-07]    [1.71e-06, 8.94e-07, 1.64e-07, 4.69e-07]    []  
-18000     [9.15e-05, 9.46e-06, 4.06e-06, 6.50e-06]    [9.15e-05, 9.46e-06, 4.06e-06, 6.50e-06]    []  
-19000     [1.36e-06, 5.92e-07, 6.32e-07, 1.61e-08]    [1.36e-06, 5.92e-07, 6.32e-07, 1.61e-08]    []  
-20000     [1.34e-06, 8.22e-07, 1.18e-07, 2.37e-07]    [1.34e-06, 8.22e-07, 1.18e-07, 2.37e-07]    []  
-21000     [1.59e-04, 7.86e-05, 2.83e-05, 2.81e-06]    [1.59e-04, 7.86e-05, 2.83e-05, 2.81e-06]    []  
-22000     [7.72e-07, 2.78e-07, 1.01e-07, 2.35e-09]    [7.72e-07, 2.78e-07, 1.01e-07, 2.35e-09]    []  
-23000     [4.94e-06, 4.48e-06, 9.19e-08, 1.15e-09]    [4.94e-06, 4.48e-06, 9.19e-08, 1.15e-09]    []  
-24000     [8.37e-07, 1.52e-06, 3.09e-07, 1.40e-07]    [8.37e-07, 1.52e-06, 3.09e-07, 1.40e-07]    []  
-25000     [1.23e-05, 7.50e-06, 4.53e-06, 4.23e-07]    [1.23e-05, 7.50e-06, 4.53e-06, 4.23e-07]    []  
-26000     [2.42e-05, 7.81e-06, 5.28e-06, 3.21e-07]    [2.42e-05, 7.81e-06, 5.28e-06, 3.21e-07]    []  
-27000     [2.80e-07, 2.61e-07, 2.51e-09, 1.59e-09]    [2.80e-07, 2.61e-07, 2.51e-09, 1.59e-09]    []  
-28000     [3.09e-05, 3.26e-06, 5.52e-07, 1.34e-06]    [3.09e-05, 3.26e-06, 5.52e-07, 1.34e-06]    []  
-29000     [1.75e-05, 4.57e-06, 5.06e-06, 3.89e-07]    [1.75e-05, 4.57e-06, 5.06e-06, 3.89e-07]    []  
-30000     [1.20e-05, 4.59e-06, 2.28e-06, 1.09e-07]    [1.20e-05, 4.59e-06, 2.28e-06, 1.09e-07]    []  
-31000     [8.00e-06, 3.67e-06, 1.20e-06, 5.44e-07]    [8.00e-06, 3.67e-06, 1.20e-06, 5.44e-07]    []  
-32000     [1.09e-05, 2.48e-06, 1.15e-06, 2.18e-06]    [1.09e-05, 2.48e-06, 1.15e-06, 2.18e-06]    []  
-33000     [1.04e-05, 3.12e-06, 2.32e-06, 3.65e-06]    [1.04e-05, 3.12e-06, 2.32e-06, 3.65e-06]    []  
-34000     [4.60e-05, 2.97e-05, 3.59e-05, 6.70e-06]    [4.60e-05, 2.97e-05, 3.59e-05, 6.70e-06]    []  
-35000     [5.62e-05, 1.70e-05, 3.69e-06, 3.09e-08]    [5.62e-05, 1.70e-05, 3.69e-06, 3.09e-08]    []  
-36000     [2.20e-06, 8.23e-07, 5.43e-07, 3.88e-08]    [2.20e-06, 8.23e-07, 5.43e-07, 3.88e-08]    []  
-37000     [1.87e-06, 9.01e-07, 1.32e-06, 6.60e-10]    [1.87e-06, 9.01e-07, 1.32e-06, 6.60e-10]    []  
-38000     [2.31e-06, 1.67e-06, 5.22e-06, 7.49e-08]    [2.31e-06, 1.67e-06, 5.22e-06, 7.49e-08]    []  
-39000     [1.87e-06, 3.27e-06, 5.79e-06, 1.26e-06]    [1.87e-06, 3.27e-06, 5.79e-06, 1.26e-06]    []  
-40000     [2.79e-05, 4.88e-06, 9.97e-06, 5.95e-06]    [2.79e-05, 4.88e-06, 9.97e-06, 5.95e-06]    []  
-41000     [8.81e-03, 2.35e-03, 1.86e-05, 8.53e-05]    [8.81e-03, 2.35e-03, 1.86e-05, 8.53e-05]    []  
-42000     [8.75e-03, 2.37e-03, 2.00e-05, 1.01e-04]    [8.75e-03, 2.37e-03, 2.00e-05, 1.01e-04]    []  
-43000     [8.45e-03, 2.34e-03, 2.90e-05, 7.36e-05]    [8.45e-03, 2.34e-03, 2.90e-05, 7.36e-05]    []  
-44000     [6.30e-03, 5.81e-03, 7.90e-06, 6.29e-04]    [6.30e-03, 5.81e-03, 7.90e-06, 6.29e-04]    []  
-45000     [1.16e-02, 9.16e-04, 1.30e-04, 1.26e-06]    [1.16e-02, 9.16e-04, 1.30e-04, 1.26e-06]    []  
-46000     [8.77e-03, 2.34e-03, 1.64e-05, 8.99e-05]    [8.77e-03, 2.34e-03, 1.64e-05, 8.99e-05]    []  
-47000     [1.91e-05, 1.77e-06, 1.53e-06, 6.77e-11]    [1.91e-05, 1.77e-06, 1.53e-06, 6.77e-11]    []  
-48000     [5.51e-06, 7.22e-07, 9.13e-07, 1.21e-07]    [5.51e-06, 7.22e-07, 9.13e-07, 1.21e-07]    []  
-49000     [1.29e-06, 5.68e-07, 1.71e-08, 1.92e-07]    [1.29e-06, 5.68e-07, 1.71e-08, 1.92e-07]    []  
-50000     [1.28e-07, 1.93e-07, 2.73e-07, 1.59e-08]    [1.28e-07, 1.93e-07, 2.73e-07, 1.59e-08]    []  
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-09 13:06:51.091757: I tensorflow/compiler/xla/stream_executor/cuda/cuda_blas.cc:630] TensorFloat-32 will be used for the matrix multiplication. This will only be logged once.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1000      [6.20e-04, 9.89e-04, 1.84e-06, 1.36e-05]    [6.20e-04, 9.89e-04, 1.84e-06, 1.36e-05]    []  
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2000      [3.30e-04, 7.51e-04, 8.11e-07, 1.14e-05]    [3.30e-04, 7.51e-04, 8.11e-07, 1.14e-05]    []  
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>3000      [2.10e-04, 6.14e-04, 1.38e-06, 5.97e-06]    [2.10e-04, 6.14e-04, 1.38e-06, 5.97e-06]    []  
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4000      [4.08e-05, 7.20e-05, 2.16e-07, 3.89e-07]    [4.08e-05, 7.20e-05, 2.16e-07, 3.89e-07]    []  
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5000      [3.04e-05, 8.69e-06, 1.13e-05, 1.44e-06]    [3.04e-05, 8.69e-06, 1.13e-05, 1.44e-06]    []  
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>6000      [2.38e-06, 3.94e-06, 3.35e-06, 6.82e-08]    [2.38e-06, 3.94e-06, 3.35e-06, 6.82e-08]    []  
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>7000      [9.41e-05, 1.88e-04, 5.99e-05, 7.39e-05]    [9.41e-05, 1.88e-04, 5.99e-05, 7.39e-05]    []  
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>8000      [2.54e-06, 2.49e-06, 1.99e-07, 5.02e-08]    [2.54e-06, 2.49e-06, 1.99e-07, 5.02e-08]    []  
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>9000      [5.28e-06, 5.12e-06, 1.42e-14, 1.64e-07]    [5.28e-06, 5.12e-06, 1.42e-14, 1.64e-07]    []  
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>10000     [4.70e-05, 1.04e-05, 1.38e-05, 3.08e-06]    [4.70e-05, 1.04e-05, 1.38e-05, 3.08e-06]    []  
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>11000     [1.52e-06, 2.30e-06, 4.34e-06, 7.85e-07]    [1.52e-06, 2.30e-06, 4.34e-06, 7.85e-07]    []  
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>12000     [8.76e-07, 8.19e-07, 8.94e-09, 1.84e-08]    [8.76e-07, 8.19e-07, 8.94e-09, 1.84e-08]    []  
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>13000     [1.09e-04, 1.10e-04, 4.17e-05, 2.81e-06]    [1.09e-04, 1.10e-04, 4.17e-05, 2.81e-06]    []  
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>14000     [7.73e-05, 4.07e-05, 6.30e-06, 5.38e-07]    [7.73e-05, 4.07e-05, 6.30e-06, 5.38e-07]    []  
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>15000     [2.17e-05, 1.67e-05, 3.15e-05, 1.61e-08]    [2.17e-05, 1.67e-05, 3.15e-05, 1.61e-08]    []  
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>16000     [1.23e-05, 2.33e-06, 1.76e-06, 3.25e-06]    [1.23e-05, 2.33e-06, 1.76e-06, 3.25e-06]    []  
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>17000     [9.78e-06, 1.21e-06, 3.14e-07, 1.49e-06]    [9.78e-06, 1.21e-06, 3.14e-07, 1.49e-06]    []  
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>18000     [4.92e-06, 2.86e-06, 1.03e-06, 3.54e-07]    [4.92e-06, 2.86e-06, 1.03e-06, 3.54e-07]    []  
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>19000     [1.69e-05, 1.07e-05, 3.08e-06, 1.34e-07]    [1.69e-05, 1.07e-05, 3.08e-06, 1.34e-07]    []  
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>20000     [2.35e-06, 3.34e-07, 1.74e-08, 3.24e-07]    [2.35e-06, 3.34e-07, 1.74e-08, 3.24e-07]    []  
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>21000     [8.57e-05, 2.50e-05, 7.80e-06, 9.24e-06]    [8.57e-05, 2.50e-05, 7.80e-06, 9.24e-06]    []  
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>22000     [2.30e-03, 1.68e-03, 2.13e-06, 4.37e-04]    [2.30e-03, 1.68e-03, 2.13e-06, 4.37e-04]    []  
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>23000     [1.92e-05, 2.27e-05, 1.50e-07, 5.96e-07]    [1.92e-05, 2.27e-05, 1.50e-07, 5.96e-07]    []  
+</pre></div>
+</div>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">KeyboardInterrupt</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span> <span class="p">[</span><span class="mi">13</span><span class="p">],</span> <span class="n">line</span> <span class="mi">2</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;adam&quot;</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span><span class="p">)</span>
+<span class="ne">----&gt; </span><span class="mi">2</span> <span class="n">losshistory</span><span class="p">,</span> <span class="n">train_state</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">iterations</span><span class="o">=</span><span class="mi">50000</span><span class="p">)</span>
 
-Best model at step 27000:
-  train loss: 5.45e-07
-  test loss: 5.45e-07
-  test metric: []
+<span class="nn">File ~/mambaforge/envs/nc-book/lib/python3.10/site-packages/deepxde/utils/internal.py:22,</span> in <span class="ni">timing.&lt;locals&gt;.wrapper</span><span class="nt">(*args, **kwargs)</span>
+<span class="g g-Whitespace">     </span><span class="mi">19</span> <span class="nd">@wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">20</span> <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="g g-Whitespace">     </span><span class="mi">21</span>     <span class="n">ts</span> <span class="o">=</span> <span class="n">timeit</span><span class="o">.</span><span class="n">default_timer</span><span class="p">()</span>
+<span class="ne">---&gt; </span><span class="mi">22</span>     <span class="n">result</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">23</span>     <span class="n">te</span> <span class="o">=</span> <span class="n">timeit</span><span class="o">.</span><span class="n">default_timer</span><span class="p">()</span>
+<span class="g g-Whitespace">     </span><span class="mi">24</span>     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%r</span><span class="s2"> took </span><span class="si">%f</span><span class="s2"> s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">te</span> <span class="o">-</span> <span class="n">ts</span><span class="p">))</span>
 
-&#39;train&#39; took 70.615370 s
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># model.compile(&quot;L-BFGS&quot;)</span>
-<span class="c1"># losshistory, train_state = model.train()</span>
+<span class="nn">File ~/mambaforge/envs/nc-book/lib/python3.10/site-packages/deepxde/model.py:594,</span> in <span class="ni">Model.train</span><span class="nt">(self, iterations, batch_size, display_every, disregard_previous_best, callbacks, model_restore_path, model_save_path, epochs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">592</span>     <span class="k">if</span> <span class="n">iterations</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">593</span>         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No iterations for </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt_name</span><span class="p">))</span>
+<span class="ne">--&gt; </span><span class="mi">594</span>     <span class="bp">self</span><span class="o">.</span><span class="n">_train_sgd</span><span class="p">(</span><span class="n">iterations</span><span class="p">,</span> <span class="n">display_every</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">595</span> <span class="bp">self</span><span class="o">.</span><span class="n">callbacks</span><span class="o">.</span><span class="n">on_train_end</span><span class="p">()</span>
+<span class="g g-Whitespace">    </span><span class="mi">597</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+<span class="nn">File ~/mambaforge/envs/nc-book/lib/python3.10/site-packages/deepxde/model.py:611,</span> in <span class="ni">Model._train_sgd</span><span class="nt">(self, iterations, display_every)</span>
+<span class="g g-Whitespace">    </span><span class="mi">606</span> <span class="bp">self</span><span class="o">.</span><span class="n">callbacks</span><span class="o">.</span><span class="n">on_batch_begin</span><span class="p">()</span>
+<span class="g g-Whitespace">    </span><span class="mi">608</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_state</span><span class="o">.</span><span class="n">set_data_train</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">609</span>     <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">train_next_batch</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">610</span> <span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">611</span> <span class="bp">self</span><span class="o">.</span><span class="n">_train_step</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">612</span>     <span class="bp">self</span><span class="o">.</span><span class="n">train_state</span><span class="o">.</span><span class="n">X_train</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">613</span>     <span class="bp">self</span><span class="o">.</span><span class="n">train_state</span><span class="o">.</span><span class="n">y_train</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">614</span>     <span class="bp">self</span><span class="o">.</span><span class="n">train_state</span><span class="o">.</span><span class="n">train_aux_vars</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">615</span> <span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">617</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_state</span><span class="o">.</span><span class="n">epoch</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="g g-Whitespace">    </span><span class="mi">618</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_state</span><span class="o">.</span><span class="n">step</span> <span class="o">+=</span> <span class="mi">1</span>
+
+<span class="nn">File ~/mambaforge/envs/nc-book/lib/python3.10/site-packages/deepxde/model.py:506,</span> in <span class="ni">Model._train_step</span><span class="nt">(self, inputs, targets, auxiliary_vars)</span>
+<span class="g g-Whitespace">    </span><span class="mi">504</span> <span class="k">if</span> <span class="n">backend_name</span> <span class="o">==</span> <span class="s2">&quot;tensorflow.compat.v1&quot;</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">505</span>     <span class="n">feed_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="o">.</span><span class="n">feed_dict</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">auxiliary_vars</span><span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">506</span>     <span class="bp">self</span><span class="o">.</span><span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">train_step</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="n">feed_dict</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">507</span> <span class="k">elif</span> <span class="n">backend_name</span> <span class="o">==</span> <span class="s2">&quot;tensorflow&quot;</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">508</span>     <span class="bp">self</span><span class="o">.</span><span class="n">train_step</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">auxiliary_vars</span><span class="p">)</span>
+
+<span class="nn">File ~/mambaforge/envs/nc-book/lib/python3.10/site-packages/tensorflow/python/client/session.py:968,</span> in <span class="ni">BaseSession.run</span><span class="nt">(self, fetches, feed_dict, options, run_metadata)</span>
+<span class="g g-Whitespace">    </span><span class="mi">965</span> <span class="n">run_metadata_ptr</span> <span class="o">=</span> <span class="n">tf_session</span><span class="o">.</span><span class="n">TF_NewBuffer</span><span class="p">()</span> <span class="k">if</span> <span class="n">run_metadata</span> <span class="k">else</span> <span class="kc">None</span>
+<span class="g g-Whitespace">    </span><span class="mi">967</span> <span class="k">try</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">968</span>   <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">fetches</span><span class="p">,</span> <span class="n">feed_dict</span><span class="p">,</span> <span class="n">options_ptr</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">969</span>                      <span class="n">run_metadata_ptr</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">970</span>   <span class="k">if</span> <span class="n">run_metadata</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">971</span>     <span class="n">proto_data</span> <span class="o">=</span> <span class="n">tf_session</span><span class="o">.</span><span class="n">TF_GetBuffer</span><span class="p">(</span><span class="n">run_metadata_ptr</span><span class="p">)</span>
+
+<span class="nn">File ~/mambaforge/envs/nc-book/lib/python3.10/site-packages/tensorflow/python/client/session.py:1191,</span> in <span class="ni">BaseSession._run</span><span class="nt">(self, handle, fetches, feed_dict, options, run_metadata)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1188</span> <span class="c1"># We only want to really perform the run if fetches or targets are provided,</span>
+<span class="g g-Whitespace">   </span><span class="mi">1189</span> <span class="c1"># or if the call is a partial run that specifies feeds.</span>
+<span class="g g-Whitespace">   </span><span class="mi">1190</span> <span class="k">if</span> <span class="n">final_fetches</span> <span class="ow">or</span> <span class="n">final_targets</span> <span class="ow">or</span> <span class="p">(</span><span class="n">handle</span> <span class="ow">and</span> <span class="n">feed_dict_tensor</span><span class="p">):</span>
+<span class="ne">-&gt; </span><span class="mi">1191</span>   <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_run</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="n">final_targets</span><span class="p">,</span> <span class="n">final_fetches</span><span class="p">,</span>
+<span class="g g-Whitespace">   </span><span class="mi">1192</span>                          <span class="n">feed_dict_tensor</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">run_metadata</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1193</span> <span class="k">else</span><span class="p">:</span>
+<span class="g g-Whitespace">   </span><span class="mi">1194</span>   <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="nn">File ~/mambaforge/envs/nc-book/lib/python3.10/site-packages/tensorflow/python/client/session.py:1371,</span> in <span class="ni">BaseSession._do_run</span><span class="nt">(self, handle, target_list, fetch_list, feed_dict, options, run_metadata)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1368</span>   <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call_tf_sessionprun</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="n">feed_dict</span><span class="p">,</span> <span class="n">fetch_list</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1370</span> <span class="k">if</span> <span class="n">handle</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+<span class="ne">-&gt; </span><span class="mi">1371</span>   <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_call</span><span class="p">(</span><span class="n">_run_fn</span><span class="p">,</span> <span class="n">feeds</span><span class="p">,</span> <span class="n">fetches</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span>
+<span class="g g-Whitespace">   </span><span class="mi">1372</span>                        <span class="n">run_metadata</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1373</span> <span class="k">else</span><span class="p">:</span>
+<span class="g g-Whitespace">   </span><span class="mi">1374</span>   <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_call</span><span class="p">(</span><span class="n">_prun_fn</span><span class="p">,</span> <span class="n">handle</span><span class="p">,</span> <span class="n">feeds</span><span class="p">,</span> <span class="n">fetches</span><span class="p">)</span>
+
+<span class="nn">File ~/mambaforge/envs/nc-book/lib/python3.10/site-packages/tensorflow/python/client/session.py:1378,</span> in <span class="ni">BaseSession._do_call</span><span class="nt">(self, fn, *args)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1376</span> <span class="k">def</span> <span class="nf">_do_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<span class="g g-Whitespace">   </span><span class="mi">1377</span>   <span class="k">try</span><span class="p">:</span>
+<span class="ne">-&gt; </span><span class="mi">1378</span>     <span class="k">return</span> <span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1379</span>   <span class="k">except</span> <span class="n">errors</span><span class="o">.</span><span class="n">OpError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<span class="g g-Whitespace">   </span><span class="mi">1380</span>     <span class="n">message</span> <span class="o">=</span> <span class="n">compat</span><span class="o">.</span><span class="n">as_text</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+
+<span class="nn">File ~/mambaforge/envs/nc-book/lib/python3.10/site-packages/tensorflow/python/client/session.py:1361,</span> in <span class="ni">BaseSession._do_run.&lt;locals&gt;._run_fn</span><span class="nt">(feed_dict, fetch_list, target_list, options, run_metadata)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1358</span> <span class="k">def</span> <span class="nf">_run_fn</span><span class="p">(</span><span class="n">feed_dict</span><span class="p">,</span> <span class="n">fetch_list</span><span class="p">,</span> <span class="n">target_list</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">run_metadata</span><span class="p">):</span>
+<span class="g g-Whitespace">   </span><span class="mi">1359</span>   <span class="c1"># Ensure any changes to the graph are reflected in the runtime.</span>
+<span class="g g-Whitespace">   </span><span class="mi">1360</span>   <span class="bp">self</span><span class="o">.</span><span class="n">_extend_graph</span><span class="p">()</span>
+<span class="ne">-&gt; </span><span class="mi">1361</span>   <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call_tf_sessionrun</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="n">feed_dict</span><span class="p">,</span> <span class="n">fetch_list</span><span class="p">,</span>
+<span class="g g-Whitespace">   </span><span class="mi">1362</span>                                   <span class="n">target_list</span><span class="p">,</span> <span class="n">run_metadata</span><span class="p">)</span>
+
+<span class="nn">File ~/mambaforge/envs/nc-book/lib/python3.10/site-packages/tensorflow/python/client/session.py:1454,</span> in <span class="ni">BaseSession._call_tf_sessionrun</span><span class="nt">(self, options, feed_dict, fetch_list, target_list, run_metadata)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1452</span> <span class="k">def</span> <span class="nf">_call_tf_sessionrun</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">feed_dict</span><span class="p">,</span> <span class="n">fetch_list</span><span class="p">,</span> <span class="n">target_list</span><span class="p">,</span>
+<span class="g g-Whitespace">   </span><span class="mi">1453</span>                         <span class="n">run_metadata</span><span class="p">):</span>
+<span class="ne">-&gt; </span><span class="mi">1454</span>   <span class="k">return</span> <span class="n">tf_session</span><span class="o">.</span><span class="n">TF_SessionRun_wrapper</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">feed_dict</span><span class="p">,</span>
+<span class="g g-Whitespace">   </span><span class="mi">1455</span>                                           <span class="n">fetch_list</span><span class="p">,</span> <span class="n">target_list</span><span class="p">,</span>
+<span class="g g-Whitespace">   </span><span class="mi">1456</span>                                           <span class="n">run_metadata</span><span class="p">)</span>
+
+<span class="ne">KeyboardInterrupt</span>: 
 </pre></div>
 </div>
 </div>
@@ -820,12 +901,12 @@ Best model at step 27000:
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/227ed94faf9ae6c19cea5aaf226140f88648bb8fea0ae7478e800f98e86d188b.png" src="../_images/227ed94faf9ae6c19cea5aaf226140f88648bb8fea0ae7478e800f98e86d188b.png" />
+<img alt="../_images/423b2c4179d67fa3491667f37b5955247c0d6dead0fb677fe797a113fc1b08e9.png" src="../_images/423b2c4179d67fa3491667f37b5955247c0d6dead0fb677fe797a113fc1b08e9.png" />
 </div>
 </div>
 </section>
 <section id="compare">
-<h2>Compare<a class="headerlink" href="#compare" title="Permalink to this headline">#</a></h2>
+<h2>Compare<a class="headerlink" href="#compare" title="Permalink to this heading">#</a></h2>
 <p>Now it is time to compare our model. We chose the Lotka-Volterra because we can obtain the solution with a Runge-Kuta algorithm, for instance, we used <code class="docutils literal notranslate"><span class="pre">solve_ivp</span></code> from <code class="docutils literal notranslate"><span class="pre">scipy</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -874,7 +955,7 @@ Best model at step 27000:
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/8257134788573e39ff841a17da8c0f15d41bf2006ac263f3c43bfd75ed2a2d4e.png" src="../_images/8257134788573e39ff841a17da8c0f15d41bf2006ac263f3c43bfd75ed2a2d4e.png" />
+<img alt="../_images/550bf68991a37d450e0a789969a5f3bd7ce70671c4ace0360465861cdcc99d38.png" src="../_images/550bf68991a37d450e0a789969a5f3bd7ce70671c4ace0360465861cdcc99d38.png" />
 </div>
 </div>
 <p>As you can see both algorithms gave us almost identical results. One of the pros that we would like to point out about Physics-Informed neural networks is that for more complex systems you only need to change a very few things more, specifically residuals. Most of the numerical work is done automatically by machine learning libraries as <code class="docutils literal notranslate"><span class="pre">TensorFlow</span></code>, <code class="docutils literal notranslate"><span class="pre">Torch</span></code>, <code class="docutils literal notranslate"><span class="pre">JAX</span></code>, etc. so it is easy to scale it up, even better when we can take advantage of GPUs. For you, as an user, your challenge will be in pick suitable hyper-parameters (number of layers, number of neurons, activation function, number of iterations, etc.) but this also could be done by other algorithms, however these are out of the scope of this lesson.</p>
