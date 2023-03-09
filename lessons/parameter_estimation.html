@@ -67,8 +67,7 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="System of Equations" href="system_of_equations.html" />
-    <link rel="prev" title="Numerical Solutions" href="numerical_solutions.html" />
+    <link rel="prev" title="System of Equations" href="system_of_equations.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -162,8 +161,8 @@ const thebe_selector_output = ".output, .cell_output"
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="motivation_differential_equations.html">Differential Equations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="numerical_solutions.html">Numerical Solutions</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Parameter Estimation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="system_of_equations.html">System of Equations</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Parameter Estimation</a></li>
 </ul>
 
     </div>
@@ -391,6 +390,7 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#train-data">Train Data</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pinn">PINN</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training">Training</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-history">Learning history</a></li>
 </ul>
             </nav>
         </div>
@@ -404,23 +404,17 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="parameter-estimation">
 <h1>Parameter Estimation<a class="headerlink" href="#parameter-estimation" title="Permalink to this heading">#</a></h1>
-<p>Let’s motivate this section with  the <strong>Lotka-Volterra equations</strong>, also known as the predator-prey equations, are a pair of first-order nonlinear differential equations, frequently used to describe the dynamics of biological systems in which two species interact. The populations change through time according to the pair of equations:</p>
+<p>Now, let’s consider another scenario. Imagine another researcher sampled data every day, <span class="math notranslate nohighlight">\(x_{observed} = (x(t_1), x(t_2) , \ldots, x(t_n))\)</span> and <span class="math notranslate nohighlight">\(y_{observed} = (y(t_1), y(t_2) , \ldots, y(t_n))\)</span> where <span class="math notranslate nohighlight">\(t_1, t_2, \ldots, t_n\)</span> represents time. The goal here is to determine the best values <span class="math notranslate nohighlight">\(\alpha\)</span>, <span class="math notranslate nohighlight">\(\beta\)</span>, <span class="math notranslate nohighlight">\(\gamma\)</span> and <span class="math notranslate nohighlight">\(\delta\)</span> for this sampled data.</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
 \dfrac{dx}{dt} = \alpha x - \beta xy \\
 \dfrac{dy}{dt} = -\gamma y + \delta xy
 \end{split}\]</div>
-<p>where</p>
-<ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(x\)</span> is the number of prey;</p></li>
-<li><p><span class="math notranslate nohighlight">\(y\)</span> is the number of some predator;</p></li>
-<li><p><span class="math notranslate nohighlight">\({\tfrac {dy}{dt}}\)</span> and <span class="math notranslate nohighlight">\({\tfrac {dx}{dt}}\)</span> represent the instantaneous growth rates of the two populations;</p></li>
-<li><p><span class="math notranslate nohighlight">\(t\)</span> represents time;</p></li>
-<li><p><span class="math notranslate nohighlight">\(\alpha\)</span>, <span class="math notranslate nohighlight">\(\beta\)</span>, <span class="math notranslate nohighlight">\(\gamma\)</span> and <span class="math notranslate nohighlight">\(\delta\)</span> are positive real parameters describing the interaction of the two species.</p></li>
-</ul>
+<p>This is called an <em>Inverse Problem</em> but some authors also called this sort of approaches as <em>Data-Driven Discovery</em>. We will use PINNs for this purpose and you will notice we only need to add some extra features compared to the last lesson.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">deepxde</span> <span class="k">as</span> <span class="nn">dde</span>
 
@@ -433,14 +427,16 @@ document.write(`
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Using backend: tensorflow.compat.v1
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-09 13:06:12.033640: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F AVX512_VNNI AVX512_BF16 FMA
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-09 18:47:04.932930: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F AVX512_VNNI AVX512_BF16 FMA
 To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
-2023-03-09 13:06:12.113819: I tensorflow/core/util/port.cc:104] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-09 13:06:12.589654: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#39;libnvinfer.so.7&#39;; dlerror: libnvinfer.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: :/home/alonsolml/mambaforge/envs/nc-book/lib/:/home/alonsolml/mambaforge/envs/nc-book/lib/
-2023-03-09 13:06:12.591224: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#39;libnvinfer_plugin.so.7&#39;; dlerror: libnvinfer_plugin.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: :/home/alonsolml/mambaforge/envs/nc-book/lib/:/home/alonsolml/mambaforge/envs/nc-book/lib/
-2023-03-09 13:06:12.591230: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Cannot dlopen some TensorRT libraries. If you would like to use Nvidia GPU with TensorRT, please make sure the missing libraries mentioned above are installed properly.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-09 18:47:05.049458: I tensorflow/core/util/port.cc:104] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-09 18:47:05.570744: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#39;libnvinfer.so.7&#39;; dlerror: libnvinfer.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: :/home/alonsolml/mambaforge/envs/nc-book/lib/:/home/alonsolml/mambaforge/envs/nc-book/lib/
+2023-03-09 18:47:05.572675: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#39;libnvinfer_plugin.so.7&#39;; dlerror: libnvinfer_plugin.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: :/home/alonsolml/mambaforge/envs/nc-book/lib/:/home/alonsolml/mambaforge/envs/nc-book/lib/
+2023-03-09 18:47:05.572682: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Cannot dlopen some TensorRT libraries. If you would like to use Nvidia GPU with TensorRT, please make sure the missing libraries mentioned above are installed properly.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:tensorflow:From /home/alonsolml/mambaforge/envs/nc-book/lib/python3.10/site-packages/tensorflow/python/compat/v2_compat.py:107: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
@@ -451,11 +447,11 @@ non-resource variables are not supported in the long term
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Enable just-in-time compilation with XLA.
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-09 13:06:13.119028: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-09 18:47:06.247394: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
-2023-03-09 13:06:13.132541: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+2023-03-09 18:47:06.278338: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
-2023-03-09 13:06:13.132575: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+2023-03-09 18:47:06.278371: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
 </pre></div>
 </div>
@@ -466,27 +462,29 @@ Your kernel may have been built without NUMA support.
 </div>
 <section id="train-data">
 <h2>Train Data<a class="headerlink" href="#train-data" title="Permalink to this heading">#</a></h2>
-<p>The train data will be generated by ourserlves, so we will have a better understading of the error. Let’s choose a time interval and parameters.</p>
+<p>The train data will be generated by ourserlves, so we will have a better understading of the error. Let’s choose a time interval, initial conditions and parameters.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t_initial</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">t_final</span> <span class="o">=</span> <span class="mi">10</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t_initial</span><span class="p">,</span> <span class="n">t_final</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">10</span>  <span class="c1"># Equivalent to 10 days</span>
 <span class="n">x0</span> <span class="o">=</span> <span class="mf">1.2</span>
 <span class="n">y0</span> <span class="o">=</span> <span class="mf">0.8</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">alpha_real</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span>
+
+<span class="n">alpha_real</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span>
 <span class="n">beta_real</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">/</span> <span class="mi">3</span>
 <span class="n">gamma_real</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">delta_real</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">parameters_real</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="n">alpha_real</span><span class="p">,</span>
+    <span class="s2">&quot;beta&quot;</span><span class="p">:</span> <span class="n">beta_real</span><span class="p">,</span>
+    <span class="s2">&quot;gamma&quot;</span><span class="p">:</span> <span class="n">gamma_real</span><span class="p">,</span>
+    <span class="s2">&quot;delta&quot;</span><span class="p">:</span> <span class="n">delta_real</span>
+<span class="p">}</span>  <span class="c1"># We will use this later for study errors</span>
 </pre></div>
 </div>
 </div>
 </div>
+<p>We can use the same approach than last lesson for generate synthetic data</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">generate_data</span><span class="p">(</span>
@@ -506,6 +504,7 @@ Your kernel may have been built without NUMA support.
         <span class="k">return</span> <span class="n">dx_dt</span><span class="p">,</span> <span class="n">dy_dt</span>
 
     <span class="n">Y0</span> <span class="o">=</span> <span class="p">[</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">]</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
     <span class="n">t_span</span> <span class="o">=</span> <span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">t</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
     <span class="n">sol</span> <span class="o">=</span> <span class="n">solve_ivp</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">t_span</span><span class="p">,</span> <span class="n">Y0</span><span class="p">,</span> <span class="n">t_eval</span><span class="o">=</span><span class="n">t</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">T</span>
@@ -515,16 +514,32 @@ Your kernel may have been built without NUMA support.
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">t_initial</span><span class="p">,</span> <span class="n">t_final</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">t_initial</span><span class="p">,</span> <span class="n">t_final</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">Y_train</span> <span class="o">=</span> <span class="n">generate_data</span><span class="p">(</span><span class="n">t_train</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">alpha_real</span><span class="p">,</span> <span class="n">beta_real</span><span class="p">,</span> <span class="n">gamma_real</span><span class="p">,</span> <span class="n">delta_real</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x_train</span> <span class="o">=</span> <span class="n">Y_train</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="n">Y_train</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">t_train</span><span class="p">,</span> <span class="n">x_train</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;x_observed&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">t_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;y_observed&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Observed data&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/c556e85757e96ddbca87ca9de125502e27e39e87feac4e6a124beb7d82d8c863.png" src="../_images/c556e85757e96ddbca87ca9de125502e27e39e87feac4e6a124beb7d82d8c863.png" />
+</div>
+</div>
 </section>
 <section id="pinn">
 <h2>PINN<a class="headerlink" href="#pinn" title="Permalink to this heading">#</a></h2>
-<p>Now we will forget for a minute about the real values of <span class="math notranslate nohighlight">\(\alpha\)</span>, <span class="math notranslate nohighlight">\(\beta\)</span>, <span class="math notranslate nohighlight">\(\gamma\)</span> and <span class="math notranslate nohighlight">\(\delta\)</span> since the goal of this lesson is to learn how to estime these parameters. Let’s start defining them in a way that our code knows they have to be learned.</p>
+<p>Now we will <em>forget</em> for a minute about the real values of <span class="math notranslate nohighlight">\(\alpha\)</span>, <span class="math notranslate nohighlight">\(\beta\)</span>, <span class="math notranslate nohighlight">\(\gamma\)</span> and <span class="math notranslate nohighlight">\(\delta\)</span> since the goal of this lesson is to learn how to estime these parameters. Let’s start defining them in a way that our code knows they have to be learned.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Pick some initial guess</span>
@@ -537,7 +552,7 @@ Your kernel may have been built without NUMA support.
 </div>
 </div>
 </div>
-<p>Now we have to define the residuals and initial conditions in the same way the forward approximation (previous lecture).</p>
+<p>Now we have to define the residuals and initial conditions in the same way the forward approximation (previous lesson).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">ode</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">Y</span><span class="p">):</span>
@@ -567,7 +582,7 @@ Your kernel may have been built without NUMA support.
 </div>
 </div>
 </div>
-<p>We can use the observed data <code class="docutils literal notranslate"><span class="pre">t_train</span></code> and <code class="docutils literal notranslate"><span class="pre">Y_train</span></code> for learning the values of our parameters. So we need to declare a new object and then include it to our model.</p>
+<p>We can use the observed data <code class="docutils literal notranslate"><span class="pre">t_train</span></code> and <code class="docutils literal notranslate"><span class="pre">Y_train</span></code>, which are equivalent to <span class="math notranslate nohighlight">\(x_{observed} = (x(t_1), x(t_2) , \ldots, x(t_n))\)</span> and <span class="math notranslate nohighlight">\(y_{observed} = (y(t_1), y(t_2) , \ldots, y(t_n))\)</span> for learning the values of our parameters. So we need to declare a new object and then include it to our model.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">observe_x</span> <span class="o">=</span> <span class="n">dde</span><span class="o">.</span><span class="n">icbc</span><span class="o">.</span><span class="n">PointSetBC</span><span class="p">(</span><span class="n">t_train</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">Y_train</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">],</span> <span class="n">component</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
@@ -584,10 +599,9 @@ Your kernel may have been built without NUMA support.
     <span class="n">geom</span><span class="p">,</span>
     <span class="n">ode</span><span class="p">,</span>
     <span class="p">[</span><span class="n">ic_x</span><span class="p">,</span> <span class="n">ic_y</span><span class="p">,</span> <span class="n">observe_x</span><span class="p">,</span> <span class="n">observe_y</span><span class="p">],</span>
-    <span class="n">num_domain</span><span class="o">=</span><span class="mi">3000</span><span class="p">,</span>
+    <span class="n">num_domain</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span>
     <span class="n">num_boundary</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-    <span class="n">anchors</span><span class="o">=</span><span class="n">t_train</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-    <span class="n">num_test</span> <span class="o">=</span> <span class="mi">5000</span><span class="p">,</span>
+    <span class="n">anchors</span><span class="o">=</span><span class="n">t_train</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -608,7 +622,7 @@ Your kernel may have been built without NUMA support.
 </section>
 <section id="training">
 <h2>Training<a class="headerlink" href="#training" title="Permalink to this heading">#</a></h2>
-<p>This step is also similar, except we have to tell our model it has to learn external variables (<span class="math notranslate nohighlight">\(\alpha\)</span>, <span class="math notranslate nohighlight">\(\beta\)</span>, <span class="math notranslate nohighlight">\(\gamma\)</span> and <span class="math notranslate nohighlight">\(\delta\)</span>).</p>
+<p>This step is also similar, except we have to tell our model it has to learn external variables (<span class="math notranslate nohighlight">\(\alpha\)</span>, <span class="math notranslate nohighlight">\(\beta\)</span>, <span class="math notranslate nohighlight">\(\gamma\)</span> and <span class="math notranslate nohighlight">\(\delta\)</span>) using <code class="docutils literal notranslate"><span class="pre">external_trainable_variables</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">dde</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">net</span><span class="p">)</span>
@@ -617,9 +631,6 @@ Your kernel may have been built without NUMA support.
     <span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span>
     <span class="n">external_trainable_variables</span><span class="o">=</span><span class="p">[</span><span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">delta</span><span class="p">]</span>
 <span class="p">)</span>
-<span class="n">losshistory</span><span class="p">,</span> <span class="n">train_state</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">iterations</span><span class="o">=</span><span class="mi">30000</span><span class="p">)</span>
-<span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;L-BFGS&quot;</span><span class="p">,</span> <span class="n">external_trainable_variables</span><span class="o">=</span><span class="p">[</span><span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">delta</span><span class="p">])</span>
-<span class="n">losshistory</span><span class="p">,</span> <span class="n">train_state</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -627,204 +638,176 @@ Your kernel may have been built without NUMA support.
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Compiling model...
 Warning: For the backend tensorflow.compat.v1, `external_trainable_variables` is ignored, and all trainable ``tf.Variable`` objects are automatically collected.
 Building feed-forward neural network...
-&#39;build&#39; took 0.033926 s
+&#39;build&#39; took 0.032296 s
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/alonsolml/mambaforge/envs/nc-book/lib/python3.10/site-packages/deepxde/nn/tensorflow_compat_v1/fnn.py:103: UserWarning: `tf.layers.dense` is deprecated and will be removed in a future version. Please use `tf.keras.layers.Dense` instead.
   return tf.layers.dense(
-2023-03-09 13:06:13.726853: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F AVX512_VNNI AVX512_BF16 FMA
+2023-03-09 18:47:06.990135: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F AVX512_VNNI AVX512_BF16 FMA
 To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
-2023-03-09 13:06:13.728430: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+2023-03-09 18:47:06.991648: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
-2023-03-09 13:06:13.728479: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+2023-03-09 18:47:06.991736: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
-2023-03-09 13:06:13.728505: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+2023-03-09 18:47:06.991765: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-09 13:06:14.098934: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-09 18:47:08.355986: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
-2023-03-09 13:06:14.099002: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+2023-03-09 18:47:08.356199: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
-2023-03-09 13:06:14.099009: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1700] Could not identify NUMA node of platform GPU id 0, defaulting to 0.  Your kernel may not have been built with NUMA support.
-2023-03-09 13:06:14.099029: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+2023-03-09 18:47:08.356206: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1700] Could not identify NUMA node of platform GPU id 0, defaulting to 0.  Your kernel may not have been built with NUMA support.
+2023-03-09 18:47:08.356233: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
-2023-03-09 13:06:14.099038: W tensorflow/core/common_runtime/gpu/gpu_bfc_allocator.cc:42] Overriding orig_value setting because the TF_FORCE_GPU_ALLOW_GROWTH environment variable is set. Original config value was 0.
-2023-03-09 13:06:14.099056: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1613] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 7369 MB memory:  -&gt; device: 0, name: NVIDIA GeForce RTX 3080, pci bus id: 0000:01:00.0, compute capability: 8.6
+2023-03-09 18:47:08.356244: W tensorflow/core/common_runtime/gpu/gpu_bfc_allocator.cc:42] Overriding orig_value setting because the TF_FORCE_GPU_ALLOW_GROWTH environment variable is set. Original config value was 0.
+2023-03-09 18:47:08.356284: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1613] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 7369 MB memory:  -&gt; device: 0, name: NVIDIA GeForce RTX 3080, pci bus id: 0000:01:00.0, compute capability: 8.6
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;compile&#39; took 0.687244 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;compile&#39; took 1.669958 s
 </pre></div>
 </div>
+</div>
+</div>
+<p>In order to study the convergence of the learning process related to the parameters we want to estimate we need a separete file where we can store these estimations. The file <code class="docutils literal notranslate"><span class="pre">variables.dat</span></code> will store ours estimations of <span class="math notranslate nohighlight">\(\alpha\)</span>, <span class="math notranslate nohighlight">\(\beta\)</span>, <span class="math notranslate nohighlight">\(\gamma\)</span> and <span class="math notranslate nohighlight">\(\delta\)</span> each 100 iterations.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">variable</span> <span class="o">=</span> <span class="n">dde</span><span class="o">.</span><span class="n">callbacks</span><span class="o">.</span><span class="n">VariableValue</span><span class="p">(</span>
+    <span class="p">[</span><span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">delta</span><span class="p">],</span>
+    <span class="n">period</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;variables.dat&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Do not forget to add this variable in the training process using <code class="docutils literal notranslate"><span class="pre">callbacks=[variable]</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">losshistory</span><span class="p">,</span> <span class="n">train_state</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">iterations</span><span class="o">=</span><span class="mi">30000</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">variable</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Initializing variables...
 Training model...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-09 13:06:14.385999: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:357] MLIR V1 optimization pass is not enabled
-2023-03-09 13:06:14.453374: I tensorflow/compiler/xla/service/service.cc:173] XLA service 0x7f17f4004ff0 initialized for platform CUDA (this does not guarantee that XLA will be used). Devices:
-2023-03-09 13:06:14.453421: I tensorflow/compiler/xla/service/service.cc:181]   StreamExecutor device (0): NVIDIA GeForce RTX 3080, Compute Capability 8.6
-2023-03-09 13:06:14.457668: I tensorflow/compiler/mlir/tensorflow/utils/dump_mlir_util.cc:268] disabling MLIR crash reproducer, set env var `MLIR_CRASH_REPRODUCER_DIRECTORY` to enable.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-09 18:47:08.651400: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:357] MLIR V1 optimization pass is not enabled
+2023-03-09 18:47:08.728273: I tensorflow/compiler/xla/service/service.cc:173] XLA service 0x7f8b44005460 initialized for platform CUDA (this does not guarantee that XLA will be used). Devices:
+2023-03-09 18:47:08.728320: I tensorflow/compiler/xla/service/service.cc:181]   StreamExecutor device (0): NVIDIA GeForce RTX 3080, Compute Capability 8.6
+2023-03-09 18:47:08.736392: I tensorflow/compiler/mlir/tensorflow/utils/dump_mlir_util.cc:268] disabling MLIR crash reproducer, set env var `MLIR_CRASH_REPRODUCER_DIRECTORY` to enable.
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-09 13:06:14.649205: I tensorflow/tsl/platform/default/subprocess.cc:304] Start cannot spawn child process: Permission denied
-2023-03-09 13:06:14.738525: I tensorflow/compiler/jit/xla_compilation_cache.cc:477] Compiled cluster using XLA!  This line is logged at most once for the lifetime of the process.
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-09 13:06:15.161979: I tensorflow/compiler/xla/stream_executor/cuda/cuda_blas.cc:630] TensorFloat-32 will be used for the matrix multiplication. This will only be logged once.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-09 18:47:08.926402: I tensorflow/tsl/platform/default/subprocess.cc:304] Start cannot spawn child process: Permission denied
+2023-03-09 18:47:09.029650: I tensorflow/compiler/jit/xla_compilation_cache.cc:477] Compiled cluster using XLA!  This line is logged at most once for the lifetime of the process.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Step      Train loss                                                      Test loss                                                       Test metric
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0         [7.34e-03, 3.80e-02, 1.44e+00, 6.40e-01, 1.67e+00, 1.65e-01]    [7.30e-03, 3.77e-02, 1.44e+00, 6.40e-01, 1.67e+00, 1.65e-01]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0         [1.31e-03, 5.65e-04, 1.44e+00, 6.40e-01, 6.57e-01, 2.25e-01]    [1.31e-03, 5.65e-04, 1.44e+00, 6.40e-01, 6.57e-01, 2.25e-01]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1000      [4.44e-03, 4.97e-03, 6.82e-05, 5.81e-07, 1.42e-03, 5.55e-04]    [4.44e-03, 4.98e-03, 6.82e-05, 5.81e-07, 1.42e-03, 5.55e-04]    []  
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-09 18:47:10.684644: I tensorflow/compiler/xla/stream_executor/cuda/cuda_blas.cc:630] TensorFloat-32 will be used for the matrix multiplication. This will only be logged once.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2000      [3.39e-04, 4.47e-05, 9.84e-06, 1.92e-05, 5.23e-05, 7.96e-05]    [3.40e-04, 4.44e-05, 9.84e-06, 1.92e-05, 5.23e-05, 7.96e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1000      [4.59e-03, 3.99e-03, 6.80e-05, 5.35e-06, 1.50e-03, 5.00e-04]    [4.59e-03, 3.99e-03, 6.80e-05, 5.35e-06, 1.50e-03, 5.00e-04]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>3000      [2.68e-05, 5.72e-06, 1.82e-07, 1.69e-06, 7.57e-06, 5.97e-06]    [2.67e-05, 5.72e-06, 1.82e-07, 1.69e-06, 7.57e-06, 5.97e-06]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2000      [1.43e-04, 5.45e-05, 1.96e-06, 1.38e-06, 5.19e-05, 5.61e-05]    [1.43e-04, 5.45e-05, 1.96e-06, 1.38e-06, 5.19e-05, 5.61e-05]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4000      [9.24e-05, 5.37e-05, 6.27e-05, 1.01e-06, 2.50e-04, 1.68e-05]    [9.18e-05, 5.36e-05, 6.27e-05, 1.01e-06, 2.50e-04, 1.68e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>3000      [1.04e-05, 5.74e-06, 5.83e-08, 2.62e-07, 1.32e-05, 9.44e-06]    [1.04e-05, 5.74e-06, 5.83e-08, 2.62e-07, 1.32e-05, 9.44e-06]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5000      [3.27e-05, 3.25e-06, 7.80e-07, 3.37e-06, 2.73e-05, 1.96e-05]    [3.25e-05, 3.26e-06, 7.80e-07, 3.37e-06, 2.73e-05, 1.96e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4000      [3.89e-05, 1.61e-05, 1.45e-06, 1.24e-07, 1.37e-04, 2.19e-05]    [3.89e-05, 1.61e-05, 1.45e-06, 1.24e-07, 1.37e-04, 2.19e-05]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>6000      [1.23e-04, 4.37e-05, 4.31e-05, 8.87e-06, 4.57e-04, 1.52e-04]    [1.22e-04, 4.36e-05, 4.31e-05, 8.87e-06, 4.57e-04, 1.52e-04]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5000      [1.83e-04, 3.25e-05, 9.84e-09, 3.40e-06, 5.95e-05, 7.47e-05]    [1.83e-04, 3.25e-05, 9.84e-09, 3.40e-06, 5.95e-05, 7.47e-05]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>7000      [4.08e-05, 1.70e-05, 1.13e-05, 3.74e-06, 1.12e-04, 4.83e-05]    [4.08e-05, 1.70e-05, 1.13e-05, 3.74e-06, 1.12e-04, 4.83e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>6000      [4.82e-05, 2.57e-05, 1.38e-05, 4.60e-08, 5.58e-05, 1.30e-05]    [4.82e-05, 2.57e-05, 1.38e-05, 4.60e-08, 5.58e-05, 1.30e-05]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>8000      [6.84e-06, 2.70e-06, 8.08e-08, 3.36e-07, 9.83e-06, 3.04e-06]    [6.75e-06, 2.68e-06, 8.08e-08, 3.36e-07, 9.83e-06, 3.04e-06]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>7000      [4.21e-06, 3.18e-06, 1.16e-07, 2.51e-11, 7.66e-06, 4.28e-06]    [4.21e-06, 3.18e-06, 1.16e-07, 2.51e-11, 7.66e-06, 4.28e-06]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>9000      [6.06e-06, 3.07e-06, 1.13e-07, 1.98e-08, 7.01e-06, 2.53e-06]    [5.98e-06, 3.08e-06, 1.13e-07, 1.98e-08, 7.01e-06, 2.53e-06]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>8000      [5.97e-06, 4.20e-06, 7.21e-07, 4.01e-08, 1.52e-05, 3.42e-06]    [5.97e-06, 4.20e-06, 7.21e-07, 4.01e-08, 1.52e-05, 3.42e-06]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>10000     [5.27e-05, 3.57e-05, 4.43e-06, 7.44e-07, 4.40e-06, 4.57e-05]    [5.27e-05, 3.57e-05, 4.43e-06, 7.44e-07, 4.40e-06, 4.57e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>9000      [4.07e-06, 2.75e-06, 6.51e-09, 4.86e-10, 2.65e-06, 2.19e-06]    [4.07e-06, 2.75e-06, 6.51e-09, 4.86e-10, 2.65e-06, 2.19e-06]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>11000     [4.89e-05, 4.85e-06, 1.96e-08, 1.91e-06, 1.10e-04, 6.58e-05]    [4.89e-05, 4.86e-06, 1.96e-08, 1.91e-06, 1.10e-04, 6.58e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>10000     [6.71e-06, 3.15e-06, 1.01e-07, 3.61e-07, 5.33e-06, 4.21e-06]    [6.71e-06, 3.15e-06, 1.01e-07, 3.61e-07, 5.33e-06, 4.21e-06]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>12000     [2.45e-05, 3.78e-06, 1.40e-06, 2.50e-07, 6.52e-06, 8.36e-06]    [2.45e-05, 3.78e-06, 1.40e-06, 2.50e-07, 6.52e-06, 8.36e-06]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>11000     [2.18e-05, 3.48e-06, 4.63e-06, 4.10e-07, 3.79e-06, 1.23e-05]    [2.18e-05, 3.48e-06, 4.63e-06, 4.10e-07, 3.79e-06, 1.23e-05]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>13000     [4.45e-06, 2.13e-06, 1.09e-08, 1.60e-07, 1.70e-06, 1.51e-06]    [4.36e-06, 2.14e-06, 1.09e-08, 1.60e-07, 1.70e-06, 1.51e-06]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>12000     [1.31e-05, 8.38e-06, 5.07e-06, 2.70e-06, 3.06e-05, 1.00e-05]    [1.31e-05, 8.38e-06, 5.07e-06, 2.70e-06, 3.06e-05, 1.00e-05]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>14000     [7.92e-06, 3.09e-06, 1.07e-06, 3.83e-07, 2.01e-05, 5.12e-06]    [7.84e-06, 3.09e-06, 1.07e-06, 3.83e-07, 2.01e-05, 5.12e-06]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>13000     [3.57e-06, 1.25e-06, 7.70e-07, 3.73e-09, 3.65e-06, 1.83e-06]    [3.57e-06, 1.25e-06, 7.70e-07, 3.73e-09, 3.65e-06, 1.83e-06]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>15000     [1.48e-05, 4.66e-06, 9.65e-07, 1.08e-06, 1.68e-06, 7.94e-06]    [1.47e-05, 4.62e-06, 9.65e-07, 1.08e-06, 1.68e-06, 7.94e-06]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>14000     [4.53e-06, 2.52e-06, 2.44e-07, 5.55e-07, 2.83e-06, 1.76e-06]    [4.53e-06, 2.52e-06, 2.44e-07, 5.55e-07, 2.83e-06, 1.76e-06]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>16000     [8.13e-06, 7.04e-06, 1.81e-05, 4.89e-07, 4.37e-06, 7.25e-06]    [8.09e-06, 7.01e-06, 1.81e-05, 4.89e-07, 4.37e-06, 7.25e-06]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>15000     [3.22e-05, 1.95e-06, 2.48e-07, 2.77e-06, 2.08e-05, 2.29e-05]    [3.22e-05, 1.95e-06, 2.48e-07, 2.77e-06, 2.08e-05, 2.29e-05]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>17000     [2.10e-04, 1.81e-05, 3.30e-07, 5.63e-08, 4.29e-05, 1.08e-04]    [2.10e-04, 1.81e-05, 3.30e-07, 5.63e-08, 4.29e-05, 1.08e-04]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>16000     [1.04e-05, 2.53e-06, 3.29e-08, 3.16e-08, 1.18e-05, 8.64e-06]    [1.04e-05, 2.53e-06, 3.29e-08, 3.16e-08, 1.18e-05, 8.64e-06]    []  
 </pre></div>
 </div>
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">KeyboardInterrupt</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span> <span class="p">[</span><span class="mi">12</span><span class="p">],</span> <span class="n">line</span> <span class="mi">7</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="n">model</span> <span class="o">=</span> <span class="n">dde</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">net</span><span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span>     <span class="s2">&quot;adam&quot;</span><span class="p">,</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span>     <span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span>     <span class="n">external_trainable_variables</span><span class="o">=</span><span class="p">[</span><span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">delta</span><span class="p">]</span>
-<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="p">)</span>
-<span class="ne">----&gt; </span><span class="mi">7</span> <span class="n">losshistory</span><span class="p">,</span> <span class="n">train_state</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">iterations</span><span class="o">=</span><span class="mi">30000</span><span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">8</span> <span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;L-BFGS&quot;</span><span class="p">,</span> <span class="n">external_trainable_variables</span><span class="o">=</span><span class="p">[</span><span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">delta</span><span class="p">])</span>
-<span class="g g-Whitespace">      </span><span class="mi">9</span> <span class="n">losshistory</span><span class="p">,</span> <span class="n">train_state</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>17000     [6.25e-06, 1.16e-06, 1.95e-07, 2.67e-08, 2.86e-06, 5.39e-06]    [6.25e-06, 1.16e-06, 1.95e-07, 2.67e-08, 2.86e-06, 5.39e-06]    []  
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>18000     [2.80e-06, 1.11e-06, 7.64e-07, 6.26e-09, 3.68e-06, 1.59e-06]    [2.80e-06, 1.11e-06, 7.64e-07, 6.26e-09, 3.68e-06, 1.59e-06]    []  
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>19000     [4.34e-06, 2.77e-06, 3.04e-06, 1.26e-06, 3.71e-06, 2.50e-06]    [4.34e-06, 2.77e-06, 3.04e-06, 1.26e-06, 3.71e-06, 2.50e-06]    []  
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>20000     [1.45e-06, 1.33e-06, 4.60e-12, 2.86e-07, 3.05e-06, 1.71e-06]    [1.45e-06, 1.33e-06, 4.60e-12, 2.86e-07, 3.05e-06, 1.71e-06]    []  
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>21000     [5.61e-05, 1.97e-05, 1.12e-05, 6.96e-07, 1.80e-05, 3.74e-05]    [5.61e-05, 1.97e-05, 1.12e-05, 6.96e-07, 1.80e-05, 3.74e-05]    []  
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>22000     [2.40e-06, 2.03e-06, 1.30e-06, 5.14e-07, 5.81e-06, 2.11e-06]    [2.40e-06, 2.03e-06, 1.30e-06, 5.14e-07, 5.81e-06, 2.11e-06]    []  
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>23000     [1.73e-06, 1.96e-06, 9.42e-09, 2.06e-07, 3.19e-06, 2.55e-06]    [1.73e-06, 1.96e-06, 9.42e-09, 2.06e-07, 3.19e-06, 2.55e-06]    []  
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>24000     [6.87e-06, 2.94e-06, 2.51e-07, 8.52e-08, 6.19e-06, 5.20e-06]    [6.87e-06, 2.94e-06, 2.51e-07, 8.52e-08, 6.19e-06, 5.20e-06]    []  
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>25000     [5.65e-05, 5.46e-06, 7.68e-08, 3.73e-06, 7.42e-06, 3.26e-05]    [5.65e-05, 5.46e-06, 7.68e-08, 3.73e-06, 7.42e-06, 3.26e-05]    []  
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>26000     [4.28e-06, 1.55e-06, 8.41e-07, 2.33e-06, 5.29e-06, 2.51e-06]    [4.28e-06, 1.55e-06, 8.41e-07, 2.33e-06, 5.29e-06, 2.51e-06]    []  
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>27000     [3.37e-04, 4.56e-05, 4.99e-06, 2.82e-05, 1.51e-03, 5.51e-04]    [3.37e-04, 4.56e-05, 4.99e-06, 2.82e-05, 1.51e-03, 5.51e-04]    []  
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>28000     [4.30e-06, 1.40e-06, 3.01e-06, 5.73e-07, 2.67e-06, 1.81e-06]    [4.30e-06, 1.40e-06, 3.01e-06, 5.73e-07, 2.67e-06, 1.81e-06]    []  
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>29000     [2.12e-05, 6.14e-06, 9.03e-08, 1.68e-06, 2.76e-05, 1.28e-05]    [2.12e-05, 6.14e-06, 9.03e-08, 1.68e-06, 2.76e-05, 1.28e-05]    []  
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>30000     [5.31e-06, 2.09e-06, 3.18e-09, 8.06e-07, 5.05e-06, 2.70e-06]    [5.31e-06, 2.09e-06, 3.18e-09, 8.06e-07, 5.05e-06, 2.70e-06]    []  
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Best model at step 20000:
+  train loss: 7.83e-06
+  test loss: 7.83e-06
+  test metric: []
 
-<span class="nn">File ~/mambaforge/envs/nc-book/lib/python3.10/site-packages/deepxde/utils/internal.py:22,</span> in <span class="ni">timing.&lt;locals&gt;.wrapper</span><span class="nt">(*args, **kwargs)</span>
-<span class="g g-Whitespace">     </span><span class="mi">19</span> <span class="nd">@wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">20</span> <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="g g-Whitespace">     </span><span class="mi">21</span>     <span class="n">ts</span> <span class="o">=</span> <span class="n">timeit</span><span class="o">.</span><span class="n">default_timer</span><span class="p">()</span>
-<span class="ne">---&gt; </span><span class="mi">22</span>     <span class="n">result</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">23</span>     <span class="n">te</span> <span class="o">=</span> <span class="n">timeit</span><span class="o">.</span><span class="n">default_timer</span><span class="p">()</span>
-<span class="g g-Whitespace">     </span><span class="mi">24</span>     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%r</span><span class="s2"> took </span><span class="si">%f</span><span class="s2"> s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">te</span> <span class="o">-</span> <span class="n">ts</span><span class="p">))</span>
-
-<span class="nn">File ~/mambaforge/envs/nc-book/lib/python3.10/site-packages/deepxde/model.py:594,</span> in <span class="ni">Model.train</span><span class="nt">(self, iterations, batch_size, display_every, disregard_previous_best, callbacks, model_restore_path, model_save_path, epochs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">592</span>     <span class="k">if</span> <span class="n">iterations</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">593</span>         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No iterations for </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opt_name</span><span class="p">))</span>
-<span class="ne">--&gt; </span><span class="mi">594</span>     <span class="bp">self</span><span class="o">.</span><span class="n">_train_sgd</span><span class="p">(</span><span class="n">iterations</span><span class="p">,</span> <span class="n">display_every</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">595</span> <span class="bp">self</span><span class="o">.</span><span class="n">callbacks</span><span class="o">.</span><span class="n">on_train_end</span><span class="p">()</span>
-<span class="g g-Whitespace">    </span><span class="mi">597</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-
-<span class="nn">File ~/mambaforge/envs/nc-book/lib/python3.10/site-packages/deepxde/model.py:611,</span> in <span class="ni">Model._train_sgd</span><span class="nt">(self, iterations, display_every)</span>
-<span class="g g-Whitespace">    </span><span class="mi">606</span> <span class="bp">self</span><span class="o">.</span><span class="n">callbacks</span><span class="o">.</span><span class="n">on_batch_begin</span><span class="p">()</span>
-<span class="g g-Whitespace">    </span><span class="mi">608</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_state</span><span class="o">.</span><span class="n">set_data_train</span><span class="p">(</span>
-<span class="g g-Whitespace">    </span><span class="mi">609</span>     <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">train_next_batch</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">610</span> <span class="p">)</span>
-<span class="ne">--&gt; </span><span class="mi">611</span> <span class="bp">self</span><span class="o">.</span><span class="n">_train_step</span><span class="p">(</span>
-<span class="g g-Whitespace">    </span><span class="mi">612</span>     <span class="bp">self</span><span class="o">.</span><span class="n">train_state</span><span class="o">.</span><span class="n">X_train</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">613</span>     <span class="bp">self</span><span class="o">.</span><span class="n">train_state</span><span class="o">.</span><span class="n">y_train</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">614</span>     <span class="bp">self</span><span class="o">.</span><span class="n">train_state</span><span class="o">.</span><span class="n">train_aux_vars</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">615</span> <span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">617</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_state</span><span class="o">.</span><span class="n">epoch</span> <span class="o">+=</span> <span class="mi">1</span>
-<span class="g g-Whitespace">    </span><span class="mi">618</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_state</span><span class="o">.</span><span class="n">step</span> <span class="o">+=</span> <span class="mi">1</span>
-
-<span class="nn">File ~/mambaforge/envs/nc-book/lib/python3.10/site-packages/deepxde/model.py:506,</span> in <span class="ni">Model._train_step</span><span class="nt">(self, inputs, targets, auxiliary_vars)</span>
-<span class="g g-Whitespace">    </span><span class="mi">504</span> <span class="k">if</span> <span class="n">backend_name</span> <span class="o">==</span> <span class="s2">&quot;tensorflow.compat.v1&quot;</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">505</span>     <span class="n">feed_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="o">.</span><span class="n">feed_dict</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">auxiliary_vars</span><span class="p">)</span>
-<span class="ne">--&gt; </span><span class="mi">506</span>     <span class="bp">self</span><span class="o">.</span><span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">train_step</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="n">feed_dict</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">507</span> <span class="k">elif</span> <span class="n">backend_name</span> <span class="o">==</span> <span class="s2">&quot;tensorflow&quot;</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">508</span>     <span class="bp">self</span><span class="o">.</span><span class="n">train_step</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">auxiliary_vars</span><span class="p">)</span>
-
-<span class="nn">File ~/mambaforge/envs/nc-book/lib/python3.10/site-packages/tensorflow/python/client/session.py:968,</span> in <span class="ni">BaseSession.run</span><span class="nt">(self, fetches, feed_dict, options, run_metadata)</span>
-<span class="g g-Whitespace">    </span><span class="mi">965</span> <span class="n">run_metadata_ptr</span> <span class="o">=</span> <span class="n">tf_session</span><span class="o">.</span><span class="n">TF_NewBuffer</span><span class="p">()</span> <span class="k">if</span> <span class="n">run_metadata</span> <span class="k">else</span> <span class="kc">None</span>
-<span class="g g-Whitespace">    </span><span class="mi">967</span> <span class="k">try</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">968</span>   <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">fetches</span><span class="p">,</span> <span class="n">feed_dict</span><span class="p">,</span> <span class="n">options_ptr</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">969</span>                      <span class="n">run_metadata_ptr</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">970</span>   <span class="k">if</span> <span class="n">run_metadata</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">971</span>     <span class="n">proto_data</span> <span class="o">=</span> <span class="n">tf_session</span><span class="o">.</span><span class="n">TF_GetBuffer</span><span class="p">(</span><span class="n">run_metadata_ptr</span><span class="p">)</span>
-
-<span class="nn">File ~/mambaforge/envs/nc-book/lib/python3.10/site-packages/tensorflow/python/client/session.py:1191,</span> in <span class="ni">BaseSession._run</span><span class="nt">(self, handle, fetches, feed_dict, options, run_metadata)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1188</span> <span class="c1"># We only want to really perform the run if fetches or targets are provided,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1189</span> <span class="c1"># or if the call is a partial run that specifies feeds.</span>
-<span class="g g-Whitespace">   </span><span class="mi">1190</span> <span class="k">if</span> <span class="n">final_fetches</span> <span class="ow">or</span> <span class="n">final_targets</span> <span class="ow">or</span> <span class="p">(</span><span class="n">handle</span> <span class="ow">and</span> <span class="n">feed_dict_tensor</span><span class="p">):</span>
-<span class="ne">-&gt; </span><span class="mi">1191</span>   <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_run</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="n">final_targets</span><span class="p">,</span> <span class="n">final_fetches</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1192</span>                          <span class="n">feed_dict_tensor</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">run_metadata</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1193</span> <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">   </span><span class="mi">1194</span>   <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
-
-<span class="nn">File ~/mambaforge/envs/nc-book/lib/python3.10/site-packages/tensorflow/python/client/session.py:1371,</span> in <span class="ni">BaseSession._do_run</span><span class="nt">(self, handle, target_list, fetch_list, feed_dict, options, run_metadata)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1368</span>   <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call_tf_sessionprun</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="n">feed_dict</span><span class="p">,</span> <span class="n">fetch_list</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1370</span> <span class="k">if</span> <span class="n">handle</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-<span class="ne">-&gt; </span><span class="mi">1371</span>   <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_call</span><span class="p">(</span><span class="n">_run_fn</span><span class="p">,</span> <span class="n">feeds</span><span class="p">,</span> <span class="n">fetches</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1372</span>                        <span class="n">run_metadata</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1373</span> <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">   </span><span class="mi">1374</span>   <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_call</span><span class="p">(</span><span class="n">_prun_fn</span><span class="p">,</span> <span class="n">handle</span><span class="p">,</span> <span class="n">feeds</span><span class="p">,</span> <span class="n">fetches</span><span class="p">)</span>
-
-<span class="nn">File ~/mambaforge/envs/nc-book/lib/python3.10/site-packages/tensorflow/python/client/session.py:1378,</span> in <span class="ni">BaseSession._do_call</span><span class="nt">(self, fn, *args)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1376</span> <span class="k">def</span> <span class="nf">_do_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
-<span class="g g-Whitespace">   </span><span class="mi">1377</span>   <span class="k">try</span><span class="p">:</span>
-<span class="ne">-&gt; </span><span class="mi">1378</span>     <span class="k">return</span> <span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1379</span>   <span class="k">except</span> <span class="n">errors</span><span class="o">.</span><span class="n">OpError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<span class="g g-Whitespace">   </span><span class="mi">1380</span>     <span class="n">message</span> <span class="o">=</span> <span class="n">compat</span><span class="o">.</span><span class="n">as_text</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
-
-<span class="nn">File ~/mambaforge/envs/nc-book/lib/python3.10/site-packages/tensorflow/python/client/session.py:1361,</span> in <span class="ni">BaseSession._do_run.&lt;locals&gt;._run_fn</span><span class="nt">(feed_dict, fetch_list, target_list, options, run_metadata)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1358</span> <span class="k">def</span> <span class="nf">_run_fn</span><span class="p">(</span><span class="n">feed_dict</span><span class="p">,</span> <span class="n">fetch_list</span><span class="p">,</span> <span class="n">target_list</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">run_metadata</span><span class="p">):</span>
-<span class="g g-Whitespace">   </span><span class="mi">1359</span>   <span class="c1"># Ensure any changes to the graph are reflected in the runtime.</span>
-<span class="g g-Whitespace">   </span><span class="mi">1360</span>   <span class="bp">self</span><span class="o">.</span><span class="n">_extend_graph</span><span class="p">()</span>
-<span class="ne">-&gt; </span><span class="mi">1361</span>   <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call_tf_sessionrun</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="n">feed_dict</span><span class="p">,</span> <span class="n">fetch_list</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1362</span>                                   <span class="n">target_list</span><span class="p">,</span> <span class="n">run_metadata</span><span class="p">)</span>
-
-<span class="nn">File ~/mambaforge/envs/nc-book/lib/python3.10/site-packages/tensorflow/python/client/session.py:1454,</span> in <span class="ni">BaseSession._call_tf_sessionrun</span><span class="nt">(self, options, feed_dict, fetch_list, target_list, run_metadata)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1452</span> <span class="k">def</span> <span class="nf">_call_tf_sessionrun</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">feed_dict</span><span class="p">,</span> <span class="n">fetch_list</span><span class="p">,</span> <span class="n">target_list</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1453</span>                         <span class="n">run_metadata</span><span class="p">):</span>
-<span class="ne">-&gt; </span><span class="mi">1454</span>   <span class="k">return</span> <span class="n">tf_session</span><span class="o">.</span><span class="n">TF_SessionRun_wrapper</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">feed_dict</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1455</span>                                           <span class="n">fetch_list</span><span class="p">,</span> <span class="n">target_list</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1456</span>                                           <span class="n">run_metadata</span><span class="p">)</span>
-
-<span class="ne">KeyboardInterrupt</span>: 
+&#39;train&#39; took 40.638638 s
 </pre></div>
 </div>
 </div>
@@ -836,15 +819,14 @@ Training model...
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/50368136d0d864bd778caf7785a47ea11168560812ce84d509c0d016a8d9ccf4.png" src="../_images/50368136d0d864bd778caf7785a47ea11168560812ce84d509c0d016a8d9ccf4.png" />
+<img alt="../_images/38f87dcb98c9d414cf00df6f1d4d87ca87a9450898c3068c2f74b6334cd1cc7c.png" src="../_images/38f87dcb98c9d414cf00df6f1d4d87ca87a9450898c3068c2f74b6334cd1cc7c.png" />
 </div>
 </div>
+<p>We can plot the data as well but it is not the main point of this lesson.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x_true</span> <span class="o">=</span> <span class="n">Y_train</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">]</span>
-<span class="n">y_true</span> <span class="o">=</span> <span class="n">Y_train</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_train</span><span class="p">,</span> <span class="n">x_true</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;x_true&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_train</span><span class="p">,</span> <span class="n">y_true</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;y_true&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">t_train</span><span class="p">,</span> <span class="n">x_train</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;x_observed&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">t_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;y_observed&quot;</span><span class="p">)</span>
 
 <span class="n">sol_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">t_train</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 <span class="n">x_pred</span> <span class="o">=</span> <span class="n">sol_pred</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">]</span>
@@ -853,16 +835,86 @@ Training model...
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_train</span><span class="p">,</span> <span class="n">x_pred</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;dashed&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;x_pred&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_train</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;orange&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;dashed&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;y_pred&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Prediction and observed data&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/39229fdc3490155e9198272c392a8ecc020c9ee747ff44857667fe9ea5077618.png" src="../_images/39229fdc3490155e9198272c392a8ecc020c9ee747ff44857667fe9ea5077618.png" />
+<img alt="../_images/35730747f70b676ab5d2b4cdf7db814d56212bde18c7e54062dc8fcf8e1e404d.png" src="../_images/35730747f70b676ab5d2b4cdf7db814d56212bde18c7e54062dc8fcf8e1e404d.png" />
 </div>
 </div>
-<div class="math notranslate nohighlight">
-\[(-\Delta)^{\alpha/2} u(x) = C(\alpha, D) \int_{||\theta||=1} D_\theta^\alpha u(x) d \theta\]</div>
+</section>
+<section id="learning-history">
+<h2>Learning history<a class="headerlink" href="#learning-history" title="Permalink to this heading">#</a></h2>
+<p>We need to open the file <code class="docutils literal notranslate"><span class="pre">variabled.dat</span></code> and create arrays for each parameter. Do not worry about the next piece of code, it will only return a dictionary where keys are the name of the parameters and values are their learning history.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lines</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;variables.dat&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+<span class="n">raw_parameters_pred_history</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+    <span class="p">[</span>
+         <span class="n">np</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span>
+            <span class="nb">min</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;(.*?)&quot;</span> <span class="o">+</span> <span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="s2">&quot;]&quot;</span><span class="p">),</span> <span class="n">line</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="nb">len</span><span class="p">),</span>
+            <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+<span class="n">iterations</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s2">&quot;^[0-9]+&quot;</span><span class="p">,</span> <span class="n">line</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">]</span>
+
+<span class="n">parameters_pred_history</span> <span class="o">=</span> <span class="p">{</span>   
+    <span class="n">name</span><span class="p">:</span> <span class="n">raw_parameters_pred_history</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">parameters_real</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="p">}</span>
+<span class="n">parameters_pred_history</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>dict_keys([&#39;alpha&#39;, &#39;beta&#39;, &#39;gamma&#39;, &#39;delta&#39;])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_callbacis</span><span class="p">,</span> <span class="n">n_variables</span> <span class="o">=</span> <span class="n">raw_parameters_pred_history</span><span class="o">.</span><span class="n">shape</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="n">n_variables</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="p">(</span><span class="n">parameter</span><span class="p">,</span> <span class="n">parameter_value</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">parameters_real</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">iterations</span><span class="p">,</span> <span class="n">parameters_pred_history</span><span class="p">[</span><span class="n">parameter</span><span class="p">]</span> <span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">iterations</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">iterations</span><span class="p">)</span> <span class="o">*</span> <span class="n">parameter_value</span><span class="p">,</span> <span class="s2">&quot;--&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">parameter</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Iterations&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Parameter estimation&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/870032e9c47ffe5ff221711eac2b94a6b4ec5c63a09a2800a96bc97572e911d9.png" src="../_images/870032e9c47ffe5ff221711eac2b94a6b4ec5c63a09a2800a96bc97572e911d9.png" />
+</div>
+</div>
+<p>It took less than 5000 iterations to get a really good approximation for each variable! Now we can calculate the relative error for each parameter since we already know the real value.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">alpha_pred</span><span class="p">,</span> <span class="n">beta_pred</span><span class="p">,</span> <span class="n">gamma_pred</span><span class="p">,</span> <span class="n">delta_pred</span> <span class="o">=</span> <span class="n">variable</span><span class="o">.</span><span class="n">value</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;alpha - real: </span><span class="si">{</span><span class="n">alpha_real</span><span class="si">:</span><span class="s2">4f</span><span class="si">}</span><span class="s2"> - predicted: </span><span class="si">{</span><span class="n">alpha_pred</span><span class="si">:</span><span class="s2">4f</span><span class="si">}</span><span class="s2"> - relative error: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">((</span><span class="n">alpha_real</span> <span class="o">-</span> <span class="n">alpha_pred</span><span class="p">)</span> <span class="o">/</span> <span class="n">alpha_real</span><span class="p">)</span><span class="si">:</span><span class="s2">4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;beta - real: </span><span class="si">{</span><span class="n">beta_real</span><span class="si">:</span><span class="s2">4f</span><span class="si">}</span><span class="s2"> - predicted: </span><span class="si">{</span><span class="n">beta_pred</span><span class="si">:</span><span class="s2">4f</span><span class="si">}</span><span class="s2"> - relative error: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">((</span><span class="n">beta_real</span> <span class="o">-</span> <span class="n">beta_pred</span><span class="p">)</span> <span class="o">/</span> <span class="n">beta_real</span><span class="p">)</span><span class="si">:</span><span class="s2">4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;gamma - real: </span><span class="si">{</span><span class="n">gamma_real</span><span class="si">:</span><span class="s2">4f</span><span class="si">}</span><span class="s2"> - predicted: </span><span class="si">{</span><span class="n">gamma_pred</span><span class="si">:</span><span class="s2">4f</span><span class="si">}</span><span class="s2"> - relative error: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">((</span><span class="n">gamma_real</span> <span class="o">-</span> <span class="n">gamma_pred</span><span class="p">)</span> <span class="o">/</span> <span class="n">gamma_real</span><span class="p">)</span><span class="si">:</span><span class="s2">4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;delta - real: </span><span class="si">{</span><span class="n">delta_real</span><span class="si">:</span><span class="s2">4f</span><span class="si">}</span><span class="s2"> - predicted: </span><span class="si">{</span><span class="n">delta_pred</span><span class="si">:</span><span class="s2">4f</span><span class="si">}</span><span class="s2"> - relative error: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">((</span><span class="n">delta_real</span> <span class="o">-</span> <span class="n">delta_pred</span><span class="p">)</span> <span class="o">/</span> <span class="n">delta_real</span><span class="p">)</span><span class="si">:</span><span class="s2">4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>alpha - real: 0.666667 - predicted: 0.665031 - relative error: 0.002454
+beta - real: 1.333333 - predicted: 1.330103 - relative error: 0.002423
+gamma - real: 1.000000 - predicted: 0.998899 - relative error: 0.001101
+delta - real: 1.000000 - predicted: 0.997614 - relative error: 0.002386
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 </section>
 
@@ -895,22 +947,13 @@ Training model...
                   <!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
-       href="numerical_solutions.html"
+       href="system_of_equations.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Numerical Solutions</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="system_of_equations.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
         <p class="prev-next-title">System of Equations</p>
       </div>
-      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
@@ -930,6 +973,7 @@ Training model...
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#train-data">Train Data</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pinn">PINN</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training">Training</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-history">Learning history</a></li>
 </ul>
   </nav></div>
 
