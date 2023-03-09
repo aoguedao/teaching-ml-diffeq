@@ -6,5 +6,5 @@ root: index
 chapters:
 - file: lessons/motivation_differential_equations
 - file: lessons/numerical_solutions
-- file: lessons/parameter_estimation
 - file: lessons/system_of_equations
+- file: lessons/parameter_estimation
