@@ -61,6 +61,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'lessons/numerical_solutions';</script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -386,8 +388,10 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#numerical-integration">Numerical Integration</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#machine-learning">Machine Learning</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#runge-kuta">Runge Kuta</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation">Implementation</a></li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -401,14 +405,109 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="numerical-solutions">
 <h1>Numerical Solutions<a class="headerlink" href="#numerical-solutions" title="Permalink to this heading">#</a></h1>
-<p>Often we can’t find an analytical solution, therefore there are some classic approaches for finding numerical solutions.</p>
-<section id="numerical-integration">
-<h2>Numerical Integration<a class="headerlink" href="#numerical-integration" title="Permalink to this heading">#</a></h2>
-<p>Runge Kuta</p>
+<p>Often we can’t find an analytical solution, therefore there are some classic approaches for finding numerical solutions. We will focus in just one for this lesson.</p>
+<section id="runge-kuta">
+<h2>Runge Kuta<a class="headerlink" href="#runge-kuta" title="Permalink to this heading">#</a></h2>
+<p>Single-step Runge–Kutta methods associate a function <span class="math notranslate nohighlight">\(\Phi(t, y, h)\)</span> which requires (possibly repeated) function evaluations of <span class="math notranslate nohighlight">\(f(t, y)\)</span> but not its derivatives.</p>
+<p>In general, single-step Runge–Kutta methods have the form:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+y_0 = y(a) \\
+y_{k+1} = y_k + h \Phi(t_k ,y_k, h)
+\end{split}\]</div>
+<p>where
+$<span class="math notranslate nohighlight">\(
+\Phi(t_k ,y_k, h) = \sum_{r=1}^R c_r K_r, \\
+K_1 = f(t, y), \\
+K_r = f(t + a_r h, y + h \sum_{s=1}^{r-1}b_{rs} K_s), \\
+a_r = \sum_{s=1}^{r-1}b_{rs}, \qquad r=2, 3, \ldots, R
+\)</span>$</p>
+<p>The most well-known Runge–Kutta scheme (from elementary numerical analysis texts) is 4-th order; it has the
+form:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+y_0 = y(t_0) \\
+y_{k+1} = y_k + \frac{h}{6} \left[ K_1 + 2 K_2 + 2 K_3 + K4 \right] \\
+K_1 = f(t_k, y_k) \\
+K_2 = f\left(t_k + \frac{h}{2}, y_k + \frac{h}{2} K_1 \right) \\
+K_3 = f\left(t_k + \frac{h}{2}, y_k + \frac{h}{2} K_2 \right) \\
+K_4 = f(t_k + h, y_k + h K_3)
+\end{split}\]</div>
+<p>i.e.,
+$<span class="math notranslate nohighlight">\(
+\Phi(t_k, y_k, h) = \frac{h}{6} \left[ K_1 + 2 K_2 + 2 K_3 + K4 \right]
+\)</span>$</p>
+<section id="implementation">
+<h3>Implementation<a class="headerlink" href="#implementation" title="Permalink to this heading">#</a></h3>
+<p>Let’s consider the following initial value problem</p>
+<p>$$
+y^\prime(t) = \frac{t}{9} \cos(2y) + t^2 \
+y(0) = 1</p>
+<p>We need a package for scientific computing (<code class="docutils literal notranslate"><span class="pre">numpy</span></code>), plotting (<code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>) and a tool for solving initial values problems with Runge-Kuta methods (<code class="docutils literal notranslate"><span class="pre">scipy.integrate.solve_ivp</span></code>).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">solve_ivp</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>First of all, you need to define a function which takes as arguments <span class="math notranslate nohighlight">\(t\)</span> and <span class="math notranslate nohighlight">\(y\)</span> and returns the right side of the equation. In this case,
+$<span class="math notranslate nohighlight">\(
+f(t, y) = \frac{t}{9} \cos(2y) + t^2
+\)</span>$</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">t</span> <span class="o">/</span> <span class="mi">9</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">y</span><span class="p">)</span> <span class="o">+</span> <span class="n">t</span> <span class="o">**</span> <span class="mi">2</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now, we need to define the domain where we will solve the equation. Since our initial condition is in <span class="math notranslate nohighlight">\(t_0=0\)</span> our domain must include it. And consider, just as an example, the final time as <span class="math notranslate nohighlight">\(t_n = 10\)</span> and <span class="math notranslate nohighlight">\(h=0.5\)</span> (later you can try smaller values!).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t0</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">tn</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">h</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">t_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">t0</span><span class="p">,</span> <span class="n">tn</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
+<span class="n">t_array</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0. , 0.5, 1. , 1.5, 2. , 2.5, 3. , 3.5, 4. , 4.5, 5. , 5.5, 6. ,
+       6.5, 7. , 7.5, 8. , 8.5, 9. , 9.5])
+</pre></div>
+</div>
+</div>
+</div>
+<p>Note that <code class="docutils literal notranslate"><span class="pre">solve_ivp</span></code> function only needs <span class="math notranslate nohighlight">\(f(t, y)\)</span>, a timespan (<code class="docutils literal notranslate"><span class="pre">t_span</span></code>) and initial conditions (<code class="docutils literal notranslate"><span class="pre">y_0</span></code>), however, we can include the points where the solution we will be evaluate with <code class="docutils literal notranslate"><span class="pre">t_eval</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sol</span> <span class="o">=</span> <span class="n">solve_ivp</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">t_span</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="n">y0</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">t_eval</span><span class="o">=</span><span class="n">t_array</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Finally, you can get the solution points with <code class="docutils literal notranslate"><span class="pre">sol.y</span></code> but for ploting we need a flat array (just use <code class="docutils literal notranslate"><span class="pre">.flatten()</span></code> method).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">y_sol</span> <span class="o">=</span> <span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_array</span><span class="p">,</span> <span class="n">y_sol</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;dashed&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7f080c87e8f0&gt;]
+</pre></div>
+</div>
+<img alt="../_images/ef00522c415eb4825b8a9d8f7d55582b314470c660ea72e96e3807ad5b61c343.png" src="../_images/ef00522c415eb4825b8a9d8f7d55582b314470c660ea72e96e3807ad5b61c343.png" />
+</div>
+</div>
 </section>
-<section id="machine-learning">
-<h2>Machine Learning<a class="headerlink" href="#machine-learning" title="Permalink to this heading">#</a></h2>
-<p>PINN</p>
 </section>
 </section>
 
@@ -473,8 +572,10 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#numerical-integration">Numerical Integration</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#machine-learning">Machine Learning</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#runge-kuta">Runge Kuta</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation">Implementation</a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 
