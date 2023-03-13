@@ -365,7 +365,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
 </div></div>
       
     </div>
@@ -381,6 +383,14 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#some-examples">Some examples</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -392,11 +402,41 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="differential-equations">
 <h1>Differential Equations<a class="headerlink" href="#differential-equations" title="Permalink to this heading">#</a></h1>
+<p>An equation involving one dependent variable and its derivatives with respect to one or more independent variables is called a <em>differential equation</em>.
+Many of the general laws of nature—in physics, chemistry, biology, and astronomy—find their most natural expression in the language of differential equations. Applications also abound in mathematics itself, especially in geometry, and in engineering, economics, and many other fields of applied science {cite}’simmons2016differential’.</p>
+<p>At the beginning of our mathematical education we learned how to deal with simple equations such as</p>
+<div class="math notranslate nohighlight">
+\[
+2 x - 4 = x + 5
+\]</div>
+<p>and how to solve them (yep, the answer is <span class="math notranslate nohighlight">\(x=3\)</span>). But later we realized the solution of a equation could be not unique or even it could not exist. In these kind of equation we wanted to find the value of <span class="math notranslate nohighlight">\(x\)</span>, a number. Now we will try to extend this to equations where we need to find a <strong>function</strong> <span class="math notranslate nohighlight">\(f(x)\)</span>. Just like <span class="math notranslate nohighlight">\(2x\)</span> or <span class="math notranslate nohighlight">\(\cos(x)\)</span> are operations we applied on <span class="math notranslate nohighlight">\(x\)</span>, we can think that <span class="math notranslate nohighlight">\(2 f(x)\)</span> and <span class="math notranslate nohighlight">\(\cos(f(x))\)</span> are applied on <span class="math notranslate nohighlight">\(f(x)\)</span>. However, we will be interested in equations involving the derivatives of <span class="math notranslate nohighlight">\(f(x)\)</span>.</p>
+<p>You will recall that if <span class="math notranslate nohighlight">\(y=f(x)\)</span> is a given function, then its derivative <span class="math notranslate nohighlight">\(dy/dx\)</span> can be interpreted as the rate of change of <span class="math notranslate nohighlight">\(y\)</span> with respect to $$. In any natural process, the variables involved and their rates of change are connected with one another by means of the basic scientific principles that govern the process. When this connection is expressed in mathematical symbols, the result is often a differential equation.</p>
+<section id="some-examples">
+<h2>Some examples<a class="headerlink" href="#some-examples" title="Permalink to this heading">#</a></h2>
+<p>Just for listing a few examples of differential equations:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
-\dfrac{dy}{dt} = k y \\
-y(0) = y_0
+\frac{dy}{dt} = -k y \\
+m\frac{d^2 y}{dt^2} = -k y\\
+\frac{dy}{dx} + 2xy = e^{-x^2}\\
+\frac{d^2y}{dx^2} - 5 \frac{dy}{dx} + 6y = 0\\
 \end{split}\]</div>
+<p>where the dependent variable in each of these equations is <span class="math notranslate nohighlight">\(y\)</span>, and the independent variable is either <span class="math notranslate nohighlight">\(t\)</span> or <span class="math notranslate nohighlight">\(x\)</span>. The letters <span class="math notranslate nohighlight">\(k\)</span> and <span class="math notranslate nohighlight">\(m\)</span> represent constants (usually associated a some physical phenomenom).</p>
+<p>An <strong>ordinary differential equation</strong> is one in which there is only one independent variable, so that all the derivatives occurring in it are ordinary derivatives.</p>
+<p>The <strong>order</strong> of a differential equation is the order of the highest derivative present.</p>
+<p>A general ordinary differential equation of <span class="math notranslate nohighlight">\(n\)</span>-th order can be written as</p>
+<div class="math notranslate nohighlight">
+\[
+F\left( x, y, \frac{dy}{dx}, \frac{d^2y}{dx^2}, \ldots, \frac{d^n y}{dx^n} \right) = 0
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(F\)</span> is just an operator. Any adequate theoretical discussion of this equation would have to be based on a careful study of explicitly assumed properties of the function <span class="math notranslate nohighlight">\(F\)</span>.</p>
+<p>Consider the equation
+$<span class="math notranslate nohighlight">\(
+\frac{dy}{dx} = 2 y,
+\)</span><span class="math notranslate nohighlight">\(
+it is simple to verify that the function \)</span>y = e^{2x}$ it is a solution. The problem of starting with a differential equation and finding a solution is naturally much more difficult.</p>
+<p>There are several solving methods for different types of ordinary differential equations, most of them covered in books. However, sometimes it is hard to find an analytical solution and then it is necesarry to apply numerical methods. Next lessons will include examples of numerical applications on ordinary differential equations.</p>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -451,6 +491,20 @@ y(0) = y_0
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#some-examples">Some examples</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

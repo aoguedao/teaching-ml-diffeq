@@ -440,9 +440,11 @@ $<span class="math notranslate nohighlight">\(
 <section id="implementation">
 <h3>Implementation<a class="headerlink" href="#implementation" title="Permalink to this heading">#</a></h3>
 <p>Let’s consider the following initial value problem</p>
-<p>$$
-y^\prime(t) = \frac{t}{9} \cos(2y) + t^2 \
-y(0) = 1</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+y^\prime(t) = \frac{t}{9} \cos(2y) + t^2 \\
+y(0) = 1
+\end{split}\]</div>
 <p>We need a package for scientific computing (<code class="docutils literal notranslate"><span class="pre">numpy</span></code>), plotting (<code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>) and a tool for solving initial values problems with Runge-Kuta methods (<code class="docutils literal notranslate"><span class="pre">scipy.integrate.solve_ivp</span></code>).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -501,7 +503,7 @@ f(t, y) = \frac{t}{9} \cos(2y) + t^2
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7f080c87e8f0&gt;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7f2e7f72e8f0&gt;]
 </pre></div>
 </div>
 <img alt="../_images/ef00522c415eb4825b8a9d8f7d55582b314470c660ea72e96e3807ad5b61c343.png" src="../_images/ef00522c415eb4825b8a9d8f7d55582b314470c660ea72e96e3807ad5b61c343.png" />

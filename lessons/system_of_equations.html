@@ -507,14 +507,14 @@ and there are not boundary conditions, only initial conditions.</p>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Using backend: tensorflow.compat.v1
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-09 18:47:54.055625: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F AVX512_VNNI AVX512_BF16 FMA
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-13 02:09:42.655196: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F AVX512_VNNI AVX512_BF16 FMA
 To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
-2023-03-09 18:47:54.125232: I tensorflow/core/util/port.cc:104] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2023-03-13 02:09:42.725248: I tensorflow/core/util/port.cc:104] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-09 18:47:54.433442: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#39;libnvinfer.so.7&#39;; dlerror: libnvinfer.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: :/home/alonsolml/mambaforge/envs/nc-book/lib/:/home/alonsolml/mambaforge/envs/nc-book/lib/
-2023-03-09 18:47:54.435143: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#39;libnvinfer_plugin.so.7&#39;; dlerror: libnvinfer_plugin.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: :/home/alonsolml/mambaforge/envs/nc-book/lib/:/home/alonsolml/mambaforge/envs/nc-book/lib/
-2023-03-09 18:47:54.435150: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Cannot dlopen some TensorRT libraries. If you would like to use Nvidia GPU with TensorRT, please make sure the missing libraries mentioned above are installed properly.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-13 02:09:43.048853: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#39;libnvinfer.so.7&#39;; dlerror: libnvinfer.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: :/home/alonsolml/mambaforge/envs/nc-book/lib/
+2023-03-13 02:09:43.050449: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#39;libnvinfer_plugin.so.7&#39;; dlerror: libnvinfer_plugin.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: :/home/alonsolml/mambaforge/envs/nc-book/lib/
+2023-03-13 02:09:43.050457: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Cannot dlopen some TensorRT libraries. If you would like to use Nvidia GPU with TensorRT, please make sure the missing libraries mentioned above are installed properly.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:tensorflow:From /home/alonsolml/mambaforge/envs/nc-book/lib/python3.10/site-packages/tensorflow/python/compat/v2_compat.py:107: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
@@ -525,11 +525,11 @@ non-resource variables are not supported in the long term
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Enable just-in-time compilation with XLA.
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-09 18:47:54.938426: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-13 02:09:43.567896: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
-2023-03-09 18:47:54.950496: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+2023-03-13 02:09:43.583373: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
-2023-03-09 18:47:54.950529: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+2023-03-13 02:09:43.583407: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
 </pre></div>
 </div>
@@ -681,214 +681,214 @@ Your kernel may have been built without NUMA support.
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Compiling model...
 Building feed-forward neural network...
-&#39;build&#39; took 0.032613 s
+&#39;build&#39; took 0.034153 s
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/alonsolml/mambaforge/envs/nc-book/lib/python3.10/site-packages/deepxde/nn/tensorflow_compat_v1/fnn.py:103: UserWarning: `tf.layers.dense` is deprecated and will be removed in a future version. Please use `tf.keras.layers.Dense` instead.
   return tf.layers.dense(
-2023-03-09 18:47:55.475830: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F AVX512_VNNI AVX512_BF16 FMA
+2023-03-13 02:09:44.122362: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F AVX512_VNNI AVX512_BF16 FMA
 To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
-2023-03-09 18:47:55.476725: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+2023-03-13 02:09:44.123185: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
-2023-03-09 18:47:55.476769: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+2023-03-13 02:09:44.123237: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
-2023-03-09 18:47:55.476796: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+2023-03-13 02:09:44.123264: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-09 18:47:55.856558: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-13 02:09:44.560736: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
-2023-03-09 18:47:55.856638: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+2023-03-13 02:09:44.560801: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
-2023-03-09 18:47:55.856645: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1700] Could not identify NUMA node of platform GPU id 0, defaulting to 0.  Your kernel may not have been built with NUMA support.
-2023-03-09 18:47:55.856667: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+2023-03-13 02:09:44.560807: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1700] Could not identify NUMA node of platform GPU id 0, defaulting to 0.  Your kernel may not have been built with NUMA support.
+2023-03-13 02:09:44.560827: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
-2023-03-09 18:47:55.856676: W tensorflow/core/common_runtime/gpu/gpu_bfc_allocator.cc:42] Overriding orig_value setting because the TF_FORCE_GPU_ALLOW_GROWTH environment variable is set. Original config value was 0.
-2023-03-09 18:47:55.856697: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1613] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 7369 MB memory:  -&gt; device: 0, name: NVIDIA GeForce RTX 3080, pci bus id: 0000:01:00.0, compute capability: 8.6
+2023-03-13 02:09:44.560835: W tensorflow/core/common_runtime/gpu/gpu_bfc_allocator.cc:42] Overriding orig_value setting because the TF_FORCE_GPU_ALLOW_GROWTH environment variable is set. Original config value was 0.
+2023-03-13 02:09:44.560853: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1613] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 7369 MB memory:  -&gt; device: 0, name: NVIDIA GeForce RTX 3080, pci bus id: 0000:01:00.0, compute capability: 8.6
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;compile&#39; took 0.660987 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;compile&#39; took 0.706656 s
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Initializing variables...
 Training model...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-09 18:47:56.108801: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:357] MLIR V1 optimization pass is not enabled
-2023-03-09 18:47:56.161741: I tensorflow/compiler/xla/service/service.cc:173] XLA service 0x7ff5c8006240 initialized for platform CUDA (this does not guarantee that XLA will be used). Devices:
-2023-03-09 18:47:56.161766: I tensorflow/compiler/xla/service/service.cc:181]   StreamExecutor device (0): NVIDIA GeForce RTX 3080, Compute Capability 8.6
-2023-03-09 18:47:56.165868: I tensorflow/compiler/mlir/tensorflow/utils/dump_mlir_util.cc:268] disabling MLIR crash reproducer, set env var `MLIR_CRASH_REPRODUCER_DIRECTORY` to enable.
-2023-03-09 18:47:56.305439: I tensorflow/tsl/platform/default/subprocess.cc:304] Start cannot spawn child process: Permission denied
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-13 02:09:44.799514: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:357] MLIR V1 optimization pass is not enabled
+2023-03-13 02:09:44.854920: I tensorflow/compiler/xla/service/service.cc:173] XLA service 0x7f7f400054d0 initialized for platform CUDA (this does not guarantee that XLA will be used). Devices:
+2023-03-13 02:09:44.854948: I tensorflow/compiler/xla/service/service.cc:181]   StreamExecutor device (0): NVIDIA GeForce RTX 3080, Compute Capability 8.6
+2023-03-13 02:09:44.858880: I tensorflow/compiler/mlir/tensorflow/utils/dump_mlir_util.cc:268] disabling MLIR crash reproducer, set env var `MLIR_CRASH_REPRODUCER_DIRECTORY` to enable.
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-09 18:47:56.368963: I tensorflow/compiler/jit/xla_compilation_cache.cc:477] Compiled cluster using XLA!  This line is logged at most once for the lifetime of the process.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-13 02:09:45.010083: I tensorflow/tsl/platform/default/subprocess.cc:304] Start cannot spawn child process: Permission denied
+2023-03-13 02:09:45.083949: I tensorflow/compiler/jit/xla_compilation_cache.cc:477] Compiled cluster using XLA!  This line is logged at most once for the lifetime of the process.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Step      Train loss                                  Test loss                                   Test metric
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0         [1.54e-03, 3.28e-01, 1.44e+00, 6.40e-01]    [1.54e-03, 3.28e-01, 1.44e+00, 6.40e-01]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0         [2.83e-01, 2.19e-04, 1.44e+00, 6.40e-01]    [2.83e-01, 2.19e-04, 1.44e+00, 6.40e-01]    []  
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-09 18:47:57.030089: I tensorflow/compiler/xla/stream_executor/cuda/cuda_blas.cc:630] TensorFloat-32 will be used for the matrix multiplication. This will only be logged once.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-13 02:09:45.875545: I tensorflow/compiler/xla/stream_executor/cuda/cuda_blas.cc:630] TensorFloat-32 will be used for the matrix multiplication. This will only be logged once.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1000      [8.83e-03, 2.36e-03, 1.72e-05, 9.17e-05]    [8.83e-03, 2.36e-03, 1.72e-05, 9.17e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1000      [8.83e-03, 2.34e-03, 1.78e-05, 9.21e-05]    [8.83e-03, 2.34e-03, 1.78e-05, 9.21e-05]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2000      [8.86e-03, 2.29e-03, 1.74e-05, 9.49e-05]    [8.86e-03, 2.29e-03, 1.74e-05, 9.49e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2000      [8.78e-03, 2.35e-03, 1.96e-05, 9.61e-05]    [8.78e-03, 2.35e-03, 1.96e-05, 9.61e-05]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>3000      [8.82e-03, 2.33e-03, 1.62e-05, 8.90e-05]    [8.82e-03, 2.33e-03, 1.62e-05, 8.90e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>3000      [8.75e-03, 2.38e-03, 2.15e-05, 1.02e-04]    [8.75e-03, 2.38e-03, 2.15e-05, 1.02e-04]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4000      [8.82e-03, 2.32e-03, 1.69e-05, 9.22e-05]    [8.82e-03, 2.32e-03, 1.69e-05, 9.22e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4000      [8.92e-03, 2.21e-03, 3.33e-05, 8.48e-05]    [8.92e-03, 2.21e-03, 3.33e-05, 8.48e-05]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5000      [9.26e-03, 2.11e-03, 5.18e-05, 6.01e-05]    [9.26e-03, 2.11e-03, 5.18e-05, 6.01e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5000      [8.93e-03, 2.22e-03, 2.49e-05, 7.61e-05]    [8.93e-03, 2.22e-03, 2.49e-05, 7.61e-05]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>6000      [8.82e-03, 2.28e-03, 1.55e-05, 1.35e-04]    [8.82e-03, 2.28e-03, 1.55e-05, 1.35e-04]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>6000      [8.81e-03, 2.32e-03, 1.56e-05, 6.64e-05]    [8.81e-03, 2.32e-03, 1.56e-05, 6.64e-05]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>7000      [8.20e-03, 2.38e-03, 3.79e-07, 5.61e-05]    [8.20e-03, 2.38e-03, 3.79e-07, 5.61e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>7000      [6.56e-04, 1.33e-03, 6.82e-07, 1.99e-05]    [6.56e-04, 1.33e-03, 6.82e-07, 1.99e-05]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>8000      [8.81e-03, 2.36e-03, 1.64e-05, 9.70e-05]    [8.81e-03, 2.36e-03, 1.64e-05, 9.70e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>8000      [2.54e-04, 6.88e-04, 7.55e-08, 1.45e-06]    [2.54e-04, 6.88e-04, 7.55e-08, 1.45e-06]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>9000      [8.75e-03, 2.32e-03, 2.06e-05, 8.83e-05]    [8.75e-03, 2.32e-03, 2.06e-05, 8.83e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>9000      [3.42e-05, 1.27e-05, 3.59e-06, 4.00e-06]    [3.42e-05, 1.27e-05, 3.59e-06, 4.00e-06]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>10000     [8.82e-03, 2.33e-03, 1.42e-05, 8.33e-05]    [8.82e-03, 2.33e-03, 1.42e-05, 8.33e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>10000     [5.99e-06, 1.63e-06, 6.00e-07, 6.92e-07]    [5.99e-06, 1.63e-06, 6.00e-07, 6.92e-07]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>11000     [8.79e-03, 2.33e-03, 1.75e-05, 8.52e-05]    [8.79e-03, 2.33e-03, 1.75e-05, 8.52e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>11000     [1.94e-05, 1.70e-05, 4.10e-05, 5.33e-07]    [1.94e-05, 1.70e-05, 4.10e-05, 5.33e-07]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>12000     [8.79e-03, 2.34e-03, 1.88e-05, 9.19e-05]    [8.79e-03, 2.34e-03, 1.88e-05, 9.19e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>12000     [1.05e-04, 2.69e-05, 3.57e-05, 7.31e-06]    [1.05e-04, 2.69e-05, 3.57e-05, 7.31e-06]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>13000     [8.51e-03, 2.28e-03, 6.95e-06, 9.45e-05]    [8.51e-03, 2.28e-03, 6.95e-06, 9.45e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>13000     [2.93e-06, 6.43e-07, 1.95e-06, 4.08e-10]    [2.93e-06, 6.43e-07, 1.95e-06, 4.08e-10]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>14000     [8.81e-03, 2.34e-03, 1.57e-05, 9.38e-05]    [8.81e-03, 2.34e-03, 1.57e-05, 9.38e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>14000     [3.45e-06, 2.39e-06, 6.85e-07, 1.84e-07]    [3.45e-06, 2.39e-06, 6.85e-07, 1.84e-07]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>15000     [8.74e-03, 2.39e-03, 1.33e-05, 8.93e-05]    [8.74e-03, 2.39e-03, 1.33e-05, 8.93e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>15000     [2.67e-05, 2.23e-05, 3.07e-05, 9.87e-07]    [2.67e-05, 2.23e-05, 3.07e-05, 9.87e-07]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>16000     [8.82e-03, 2.34e-03, 1.67e-05, 9.06e-05]    [8.82e-03, 2.34e-03, 1.67e-05, 9.06e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>16000     [2.76e-06, 1.46e-06, 2.77e-07, 5.10e-08]    [2.76e-06, 1.46e-06, 2.77e-07, 5.10e-08]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>17000     [8.83e-03, 2.30e-03, 1.85e-05, 8.71e-05]    [8.83e-03, 2.30e-03, 1.85e-05, 8.71e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>17000     [1.37e-05, 1.39e-05, 2.43e-05, 6.05e-07]    [1.37e-05, 1.39e-05, 2.43e-05, 6.05e-07]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>18000     [8.78e-03, 2.33e-03, 2.12e-05, 1.06e-04]    [8.78e-03, 2.33e-03, 2.12e-05, 1.06e-04]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>18000     [5.85e-06, 3.67e-06, 4.81e-07, 8.72e-08]    [5.85e-06, 3.67e-06, 4.81e-07, 8.72e-08]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>19000     [9.35e-03, 2.00e-03, 2.15e-04, 1.04e-04]    [9.35e-03, 2.00e-03, 2.15e-04, 1.04e-04]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>19000     [9.60e-06, 3.75e-06, 7.15e-06, 1.51e-07]    [9.60e-06, 3.75e-06, 7.15e-06, 1.51e-07]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>20000     [8.82e-03, 2.33e-03, 1.65e-05, 9.43e-05]    [8.82e-03, 2.33e-03, 1.65e-05, 9.43e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>20000     [1.94e-05, 5.14e-06, 1.41e-07, 6.19e-07]    [1.94e-05, 5.14e-06, 1.41e-07, 6.19e-07]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>21000     [9.01e-03, 2.13e-03, 3.92e-05, 7.79e-05]    [9.01e-03, 2.13e-03, 3.92e-05, 7.79e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>21000     [6.37e-07, 3.67e-07, 5.43e-09, 3.54e-08]    [6.37e-07, 3.67e-07, 5.43e-09, 3.54e-08]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>22000     [9.96e-03, 2.01e-03, 6.87e-06, 6.90e-06]    [9.96e-03, 2.01e-03, 6.87e-06, 6.90e-06]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>22000     [1.64e-06, 1.43e-06, 1.85e-06, 1.89e-06]    [1.64e-06, 1.43e-06, 1.85e-06, 1.89e-06]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>23000     [8.73e-03, 2.38e-03, 3.82e-05, 1.46e-04]    [8.73e-03, 2.38e-03, 3.82e-05, 1.46e-04]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>23000     [1.26e-05, 5.88e-06, 5.18e-06, 1.78e-09]    [1.26e-05, 5.88e-06, 5.18e-06, 1.78e-09]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>24000     [8.80e-03, 2.33e-03, 1.74e-05, 7.95e-05]    [8.80e-03, 2.33e-03, 1.74e-05, 7.95e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>24000     [2.57e-05, 1.16e-05, 7.25e-06, 2.15e-10]    [2.57e-05, 1.16e-05, 7.25e-06, 2.15e-10]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>25000     [8.82e-03, 2.32e-03, 1.96e-05, 8.84e-05]    [8.82e-03, 2.32e-03, 1.96e-05, 8.84e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>25000     [4.58e-07, 4.01e-07, 1.18e-07, 4.49e-09]    [4.58e-07, 4.01e-07, 1.18e-07, 4.49e-09]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>26000     [8.60e-03, 2.50e-03, 2.86e-05, 1.59e-04]    [8.60e-03, 2.50e-03, 2.86e-05, 1.59e-04]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>26000     [1.49e-06, 8.57e-07, 1.68e-06, 1.62e-07]    [1.49e-06, 8.57e-07, 1.68e-06, 1.62e-07]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>27000     [8.52e-03, 2.25e-03, 3.30e-05, 7.37e-05]    [8.52e-03, 2.25e-03, 3.30e-05, 7.37e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>27000     [1.21e-05, 1.24e-06, 3.31e-07, 1.01e-06]    [1.21e-05, 1.24e-06, 3.31e-07, 1.01e-06]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>28000     [8.83e-03, 2.32e-03, 1.79e-05, 8.66e-05]    [8.83e-03, 2.32e-03, 1.79e-05, 8.66e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>28000     [5.71e-07, 1.93e-07, 2.18e-07, 1.44e-07]    [5.71e-07, 1.93e-07, 2.18e-07, 1.44e-07]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>29000     [8.78e-03, 2.37e-03, 1.31e-05, 8.59e-05]    [8.78e-03, 2.37e-03, 1.31e-05, 8.59e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>29000     [6.70e-06, 1.27e-06, 1.32e-07, 1.77e-07]    [6.70e-06, 1.27e-06, 1.32e-07, 1.77e-07]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>30000     [8.37e-03, 2.52e-03, 1.51e-05, 1.37e-04]    [8.37e-03, 2.52e-03, 1.51e-05, 1.37e-04]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>30000     [4.51e-05, 7.37e-06, 2.25e-07, 5.56e-07]    [4.51e-05, 7.37e-06, 2.25e-07, 5.56e-07]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>31000     [8.84e-03, 2.30e-03, 2.75e-05, 9.14e-05]    [8.84e-03, 2.30e-03, 2.75e-05, 9.14e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>31000     [1.16e-06, 2.57e-06, 2.68e-06, 7.26e-09]    [1.16e-06, 2.57e-06, 2.68e-06, 7.26e-09]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>32000     [9.07e-03, 2.13e-03, 1.15e-04, 2.27e-05]    [9.07e-03, 2.13e-03, 1.15e-04, 2.27e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>32000     [2.84e-06, 3.92e-07, 1.57e-07, 1.37e-08]    [2.84e-06, 3.92e-07, 1.57e-07, 1.37e-08]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>33000     [8.80e-03, 2.33e-03, 1.97e-05, 9.64e-05]    [8.80e-03, 2.33e-03, 1.97e-05, 9.64e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>33000     [3.48e-05, 7.66e-06, 3.96e-06, 2.22e-06]    [3.48e-05, 7.66e-06, 3.96e-06, 2.22e-06]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>34000     [8.81e-03, 2.34e-03, 1.83e-05, 9.03e-05]    [8.81e-03, 2.34e-03, 1.83e-05, 9.03e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>34000     [2.36e-05, 1.86e-06, 6.70e-06, 2.19e-07]    [2.36e-05, 1.86e-06, 6.70e-06, 2.19e-07]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>35000     [8.81e-03, 2.35e-03, 8.45e-06, 9.10e-05]    [8.81e-03, 2.35e-03, 8.45e-06, 9.10e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>35000     [9.36e-07, 4.71e-07, 3.04e-06, 3.27e-07]    [9.36e-07, 4.71e-07, 3.04e-06, 3.27e-07]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>36000     [8.79e-03, 2.35e-03, 1.65e-05, 9.41e-05]    [8.79e-03, 2.35e-03, 1.65e-05, 9.41e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>36000     [3.27e-07, 7.15e-07, 1.60e-10, 5.07e-09]    [3.27e-07, 7.15e-07, 1.60e-10, 5.07e-09]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>37000     [9.78e-03, 1.82e-03, 9.77e-05, 6.92e-07]    [9.78e-03, 1.82e-03, 9.77e-05, 6.92e-07]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>37000     [3.42e-05, 2.87e-05, 1.05e-05, 7.58e-06]    [3.42e-05, 2.87e-05, 1.05e-05, 7.58e-06]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>38000     [8.74e-03, 2.35e-03, 1.60e-05, 1.29e-04]    [8.74e-03, 2.35e-03, 1.60e-05, 1.29e-04]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>38000     [1.46e-05, 2.32e-06, 2.42e-06, 8.86e-07]    [1.46e-05, 2.32e-06, 2.42e-06, 8.86e-07]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>39000     [4.69e-03, 3.74e-03, 4.84e-06, 3.78e-05]    [4.69e-03, 3.74e-03, 4.84e-06, 3.78e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>39000     [5.67e-06, 2.25e-07, 1.20e-07, 2.98e-06]    [5.67e-06, 2.25e-07, 1.20e-07, 2.98e-06]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>40000     [8.77e-03, 2.34e-03, 1.96e-05, 1.16e-04]    [8.77e-03, 2.34e-03, 1.96e-05, 1.16e-04]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>40000     [1.61e-06, 4.79e-06, 1.54e-07, 2.81e-09]    [1.61e-06, 4.79e-06, 1.54e-07, 2.81e-09]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>41000     [8.64e-03, 2.56e-03, 2.29e-06, 8.83e-05]    [8.64e-03, 2.56e-03, 2.29e-06, 8.83e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>41000     [1.06e-06, 1.15e-07, 1.30e-07, 4.45e-07]    [1.06e-06, 1.15e-07, 1.30e-07, 4.45e-07]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>42000     [8.35e-03, 2.44e-03, 3.28e-05, 1.59e-04]    [8.35e-03, 2.44e-03, 3.28e-05, 1.59e-04]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>42000     [2.33e-06, 5.94e-07, 1.21e-06, 1.05e-07]    [2.33e-06, 5.94e-07, 1.21e-06, 1.05e-07]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>43000     [8.74e-03, 2.29e-03, 2.92e-05, 5.85e-05]    [8.74e-03, 2.29e-03, 2.92e-05, 5.85e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>43000     [1.62e-06, 1.03e-06, 3.88e-07, 3.02e-07]    [1.62e-06, 1.03e-06, 3.88e-07, 3.02e-07]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>44000     [8.79e-03, 2.37e-03, 8.04e-06, 9.03e-05]    [8.79e-03, 2.37e-03, 8.04e-06, 9.03e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>44000     [4.59e-06, 4.20e-06, 8.15e-08, 2.22e-06]    [4.59e-06, 4.20e-06, 8.15e-08, 2.22e-06]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>45000     [8.80e-03, 2.31e-03, 1.54e-05, 6.93e-05]    [8.80e-03, 2.31e-03, 1.54e-05, 6.93e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>45000     [4.28e-06, 9.65e-07, 6.57e-07, 7.13e-08]    [4.28e-06, 9.65e-07, 6.57e-07, 7.13e-08]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>46000     [7.92e-03, 3.13e-03, 9.06e-05, 2.31e-04]    [7.92e-03, 3.13e-03, 9.06e-05, 2.31e-04]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>46000     [5.12e-06, 4.20e-07, 1.29e-08, 3.66e-07]    [5.12e-06, 4.20e-07, 1.29e-08, 3.66e-07]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>47000     [3.09e-04, 8.34e-04, 1.67e-05, 2.05e-05]    [3.09e-04, 8.34e-04, 1.67e-05, 2.05e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>47000     [4.32e-06, 2.51e-06, 2.45e-07, 1.35e-06]    [4.32e-06, 2.51e-06, 2.45e-07, 1.35e-06]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>48000     [2.04e-05, 1.51e-05, 8.92e-06, 3.02e-06]    [2.04e-05, 1.51e-05, 8.92e-06, 3.02e-06]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>48000     [2.36e-06, 2.56e-06, 4.83e-06, 2.37e-07]    [2.36e-06, 2.56e-06, 4.83e-06, 2.37e-07]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>49000     [8.42e-05, 1.33e-04, 1.45e-04, 8.53e-06]    [8.42e-05, 1.33e-04, 1.45e-04, 8.53e-06]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>49000     [9.03e-06, 3.11e-06, 5.68e-06, 2.24e-06]    [9.03e-06, 3.11e-06, 5.68e-06, 2.24e-06]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>50000     [3.66e-05, 6.04e-06, 1.08e-09, 9.30e-06]    [3.66e-05, 6.04e-06, 1.08e-09, 9.30e-06]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>50000     [3.71e-06, 7.92e-06, 8.69e-06, 3.45e-08]    [3.71e-06, 7.92e-06, 8.69e-06, 3.45e-08]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Best model at step 48000:
-  train loss: 4.74e-05
-  test loss: 4.74e-05
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Best model at step 25000:
+  train loss: 9.82e-07
+  test loss: 9.82e-07
   test metric: []
 
-&#39;train&#39; took 59.755694 s
+&#39;train&#39; took 61.700670 s
 </pre></div>
 </div>
 </div>
@@ -901,7 +901,7 @@ Training model...
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/2127fb0ddf33120868de8ab0bcdf226da72f163eeb079e818f4cfa60ea1957a4.png" src="../_images/2127fb0ddf33120868de8ab0bcdf226da72f163eeb079e818f4cfa60ea1957a4.png" />
+<img alt="../_images/60f7d052b91a5613c6c9c2257e843bf7dcdc5c3a0654f02dff5a95d729ae9c3a.png" src="../_images/60f7d052b91a5613c6c9c2257e843bf7dcdc5c3a0654f02dff5a95d729ae9c3a.png" />
 </div>
 </div>
 </section>
@@ -955,7 +955,7 @@ Training model...
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/1d5e1da8f1349e97f599c73fe50aff40fd94b776034d271def1df04316e51d36.png" src="../_images/1d5e1da8f1349e97f599c73fe50aff40fd94b776034d271def1df04316e51d36.png" />
+<img alt="../_images/9165bf9c219daf1d4c4f069c50518f29b22e719e357924f7902df7479a2a9306.png" src="../_images/9165bf9c219daf1d4c4f069c50518f29b22e719e357924f7902df7479a2a9306.png" />
 </div>
 </div>
 <p>As you can see both algorithms gave us almost identical results. One of the pros that we would like to point out about Physics-Informed neural networks is that for more complex systems you only need to change a very few things more, specifically residuals. Most of the numerical work is done automatically by machine learning libraries as <code class="docutils literal notranslate"><span class="pre">TensorFlow</span></code>, <code class="docutils literal notranslate"><span class="pre">Torch</span></code>, <code class="docutils literal notranslate"><span class="pre">JAX</span></code>, etc. so it is easy to scale it up, even better when we can take advantage of GPUs. For you, as an user, your challenge will be in pick suitable hyper-parameters (number of layers, number of neurons, activation function, number of iterations, etc.) but this also could be done by other algorithms, however these are out of the scope of this lesson.</p>
