@@ -4,16 +4,18 @@
 title: A Literate Programming approach for motivating and teaching machine learning approaches to solve differential equations
 author: Alonso Ogueda & Padhu Seshaiyer
 logo: images/GMU_PLogo_4CP.png
-exclude_patterns: ["README.md"]
+exclude_patterns: ["README.md", "**.ipynb_checkpoints"]
+only_build_toc_files: true
 
 # Force re-execution of notebooks on each build.
 # See https://jupyterbook.org/content/execute.html
 execute:
-  execute_notebooks: force
+  execute_notebooks: cache
   timeout: 300
 
 # Define the name of the latex output file for PDF builds
 latex:
+  latex_engine: "xelatex" 
   latex_documents:
     targetname: book.tex
 
@@ -37,3 +39,7 @@ html:
 
 launch_buttons:
   colab_url: "https://colab.research.google.com"
+
+sphinx:
+  config:
+    bibtex_reference_style: author_year
