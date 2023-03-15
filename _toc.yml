@@ -8,3 +8,4 @@ chapters:
 - file: lessons/numerical_solutions
 - file: lessons/system_of_equations
 - file: lessons/parameter_estimation
+- file: lessons/sird
