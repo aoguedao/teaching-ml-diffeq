@@ -164,6 +164,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="numerical_solutions.html">Numerical Solutions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="system_of_equations.html">System of Equations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parameter_estimation.html">Parameter Estimation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sird.html">Application to Disease Dynamics</a></li>
 </ul>
 
     </div>
@@ -430,11 +431,12 @@ m\frac{d^2 y}{dt^2} = -k y\\
 F\left( x, y, \frac{dy}{dx}, \frac{d^2y}{dx^2}, \ldots, \frac{d^n y}{dx^n} \right) = 0
 \]</div>
 <p>where <span class="math notranslate nohighlight">\(F\)</span> is just an operator. Any adequate theoretical discussion of this equation would have to be based on a careful study of explicitly assumed properties of the function <span class="math notranslate nohighlight">\(F\)</span>.</p>
-<p>Consider the equation
-$<span class="math notranslate nohighlight">\(
+<p>Consider the equation</p>
+<div class="math notranslate nohighlight">
+\[
 \frac{dy}{dx} = 2 y,
-\)</span><span class="math notranslate nohighlight">\(
-it is simple to verify that the function \)</span>y = e^{2x}$ it is a solution. The problem of starting with a differential equation and finding a solution is naturally much more difficult.</p>
+\]</div>
+<p>it is simple to verify that the function <span class="math notranslate nohighlight">\(y = e^{2x}\)</span> it is a solution. The problem of starting with a differential equation and finding a solution is naturally much more difficult.</p>
 <p>There are several solving methods for different types of ordinary differential equations, most of them covered in books. However, sometimes it is hard to find an analytical solution and then it is necesarry to apply numerical methods. Next lessons will include examples of numerical applications on ordinary differential equations.</p>
 </section>
 </section>

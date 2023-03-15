@@ -164,6 +164,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Numerical Solutions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="system_of_equations.html">System of Equations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parameter_estimation.html">Parameter Estimation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sird.html">Application to Disease Dynamics</a></li>
 </ul>
 
     </div>
@@ -415,13 +416,14 @@ document.write(`
 y_0 = y(a) \\
 y_{k+1} = y_k + h \Phi(t_k ,y_k, h)
 \end{split}\]</div>
-<p>where
-$<span class="math notranslate nohighlight">\(
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \Phi(t_k ,y_k, h) = \sum_{r=1}^R c_r K_r, \\
 K_1 = f(t, y), \\
 K_r = f(t + a_r h, y + h \sum_{s=1}^{r-1}b_{rs} K_s), \\
 a_r = \sum_{s=1}^{r-1}b_{rs}, \qquad r=2, 3, \ldots, R
-\)</span>$</p>
+\end{split}\]</div>
 <p>The most well-known Runge–Kutta scheme (from elementary numerical analysis texts) is 4-th order; it has the
 form:</p>
 <div class="math notranslate nohighlight">

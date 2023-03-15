@@ -67,6 +67,7 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Application to Disease Dynamics" href="sird.html" />
     <link rel="prev" title="System of Equations" href="system_of_equations.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -163,6 +164,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="numerical_solutions.html">Numerical Solutions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="system_of_equations.html">System of Equations</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Parameter Estimation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sird.html">Application to Disease Dynamics</a></li>
 </ul>
 
     </div>
@@ -427,14 +429,14 @@ document.write(`
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Using backend: tensorflow.compat.v1
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-13 02:08:52.553907: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F AVX512_VNNI AVX512_BF16 FMA
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-15 17:02:00.781979: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F AVX512_VNNI AVX512_BF16 FMA
 To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
-2023-03-13 02:08:52.618653: I tensorflow/core/util/port.cc:104] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2023-03-15 17:02:00.863505: I tensorflow/core/util/port.cc:104] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-13 02:08:53.137073: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#39;libnvinfer.so.7&#39;; dlerror: libnvinfer.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: :/home/alonsolml/mambaforge/envs/nc-book/lib/
-2023-03-13 02:08:53.138961: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#39;libnvinfer_plugin.so.7&#39;; dlerror: libnvinfer_plugin.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: :/home/alonsolml/mambaforge/envs/nc-book/lib/
-2023-03-13 02:08:53.138968: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Cannot dlopen some TensorRT libraries. If you would like to use Nvidia GPU with TensorRT, please make sure the missing libraries mentioned above are installed properly.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-15 17:02:01.305637: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#39;libnvinfer.so.7&#39;; dlerror: libnvinfer.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: :/home/alonsolml/mambaforge/envs/nc-book/lib/
+2023-03-15 17:02:01.307236: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#39;libnvinfer_plugin.so.7&#39;; dlerror: libnvinfer_plugin.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: :/home/alonsolml/mambaforge/envs/nc-book/lib/
+2023-03-15 17:02:01.307241: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Cannot dlopen some TensorRT libraries. If you would like to use Nvidia GPU with TensorRT, please make sure the missing libraries mentioned above are installed properly.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:tensorflow:From /home/alonsolml/mambaforge/envs/nc-book/lib/python3.10/site-packages/tensorflow/python/compat/v2_compat.py:107: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
@@ -445,11 +447,11 @@ non-resource variables are not supported in the long term
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Enable just-in-time compilation with XLA.
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-13 02:08:53.813411: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-15 17:02:01.889565: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
-2023-03-13 02:08:53.835031: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+2023-03-15 17:02:01.911908: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
-2023-03-13 02:08:53.835065: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+2023-03-15 17:02:01.911943: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
 </pre></div>
 </div>
@@ -636,33 +638,33 @@ Your kernel may have been built without NUMA support.
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Compiling model...
 Warning: For the backend tensorflow.compat.v1, `external_trainable_variables` is ignored, and all trainable ``tf.Variable`` objects are automatically collected.
 Building feed-forward neural network...
-&#39;build&#39; took 0.035757 s
+&#39;build&#39; took 0.035927 s
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/alonsolml/mambaforge/envs/nc-book/lib/python3.10/site-packages/deepxde/nn/tensorflow_compat_v1/fnn.py:103: UserWarning: `tf.layers.dense` is deprecated and will be removed in a future version. Please use `tf.keras.layers.Dense` instead.
   return tf.layers.dense(
-2023-03-13 02:08:54.495677: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F AVX512_VNNI AVX512_BF16 FMA
+2023-03-15 17:02:02.593871: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F AVX512_VNNI AVX512_BF16 FMA
 To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
-2023-03-13 02:08:54.497313: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+2023-03-15 17:02:02.594887: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
-2023-03-13 02:08:54.497357: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+2023-03-15 17:02:02.594933: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
-2023-03-13 02:08:54.497382: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+2023-03-15 17:02:02.594964: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-13 02:08:55.615370: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-15 17:02:03.525029: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
-2023-03-13 02:08:55.615591: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+2023-03-15 17:02:03.525307: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
-2023-03-13 02:08:55.615597: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1700] Could not identify NUMA node of platform GPU id 0, defaulting to 0.  Your kernel may not have been built with NUMA support.
-2023-03-13 02:08:55.615623: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+2023-03-15 17:02:03.525315: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1700] Could not identify NUMA node of platform GPU id 0, defaulting to 0.  Your kernel may not have been built with NUMA support.
+2023-03-15 17:02:03.525342: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
-2023-03-13 02:08:55.615634: W tensorflow/core/common_runtime/gpu/gpu_bfc_allocator.cc:42] Overriding orig_value setting because the TF_FORCE_GPU_ALLOW_GROWTH environment variable is set. Original config value was 0.
-2023-03-13 02:08:55.615653: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1613] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 7369 MB memory:  -&gt; device: 0, name: NVIDIA GeForce RTX 3080, pci bus id: 0000:01:00.0, compute capability: 8.6
+2023-03-15 17:02:03.525366: W tensorflow/core/common_runtime/gpu/gpu_bfc_allocator.cc:42] Overriding orig_value setting because the TF_FORCE_GPU_ALLOW_GROWTH environment variable is set. Original config value was 0.
+2023-03-15 17:02:03.525406: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1613] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 7369 MB memory:  -&gt; device: 0, name: NVIDIA GeForce RTX 3080, pci bus id: 0000:01:00.0, compute capability: 8.6
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;compile&#39; took 1.420240 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;compile&#39; took 1.186177 s
 </pre></div>
 </div>
 </div>
@@ -680,9 +682,9 @@ Your kernel may have been built without NUMA support.
 </div>
 </div>
 <p>Do not forget to add this variable in the training process using <code class="docutils literal notranslate"><span class="pre">callbacks=[variable]</span></code>.</p>
-<div class="cell docutils container">
+<div class="cell tag_output_scroll docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">losshistory</span><span class="p">,</span> <span class="n">train_state</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">iterations</span><span class="o">=</span><span class="mi">30000</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">variable</span><span class="p">])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">losshistory</span><span class="p">,</span> <span class="n">train_state</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">iterations</span><span class="o">=</span><span class="mi">30000</span><span class="p">,</span> <span class="n">display_every</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">variable</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
@@ -691,121 +693,49 @@ Your kernel may have been built without NUMA support.
 Training model...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-13 02:08:55.901892: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:357] MLIR V1 optimization pass is not enabled
-2023-03-13 02:08:55.985183: I tensorflow/compiler/xla/service/service.cc:173] XLA service 0x7fa7fc005f30 initialized for platform CUDA (this does not guarantee that XLA will be used). Devices:
-2023-03-13 02:08:55.985209: I tensorflow/compiler/xla/service/service.cc:181]   StreamExecutor device (0): NVIDIA GeForce RTX 3080, Compute Capability 8.6
-2023-03-13 02:08:55.992288: I tensorflow/compiler/mlir/tensorflow/utils/dump_mlir_util.cc:268] disabling MLIR crash reproducer, set env var `MLIR_CRASH_REPRODUCER_DIRECTORY` to enable.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-15 17:02:03.757272: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:357] MLIR V1 optimization pass is not enabled
+2023-03-15 17:02:03.823291: I tensorflow/compiler/xla/service/service.cc:173] XLA service 0x7fd414005840 initialized for platform CUDA (this does not guarantee that XLA will be used). Devices:
+2023-03-15 17:02:03.823318: I tensorflow/compiler/xla/service/service.cc:181]   StreamExecutor device (0): NVIDIA GeForce RTX 3080, Compute Capability 8.6
+2023-03-15 17:02:03.828466: I tensorflow/compiler/mlir/tensorflow/utils/dump_mlir_util.cc:268] disabling MLIR crash reproducer, set env var `MLIR_CRASH_REPRODUCER_DIRECTORY` to enable.
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-13 02:08:56.195409: I tensorflow/tsl/platform/default/subprocess.cc:304] Start cannot spawn child process: Permission denied
-2023-03-13 02:08:56.322215: I tensorflow/compiler/jit/xla_compilation_cache.cc:477] Compiled cluster using XLA!  This line is logged at most once for the lifetime of the process.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-15 17:02:04.013126: I tensorflow/tsl/platform/default/subprocess.cc:304] Start cannot spawn child process: Permission denied
+2023-03-15 17:02:04.086472: I tensorflow/compiler/jit/xla_compilation_cache.cc:477] Compiled cluster using XLA!  This line is logged at most once for the lifetime of the process.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-15 17:02:04.462928: I tensorflow/compiler/xla/stream_executor/cuda/cuda_blas.cc:630] TensorFloat-32 will be used for the matrix multiplication. This will only be logged once.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Step      Train loss                                                      Test loss                                                       Test metric
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0         [1.01e-03, 2.15e-03, 1.44e+00, 6.40e-01, 6.91e-01, 7.10e-01]    [1.01e-03, 2.15e-03, 1.44e+00, 6.40e-01, 6.91e-01, 7.10e-01]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0         [2.01e-04, 6.02e-03, 1.44e+00, 6.40e-01, 8.90e-01, 1.18e-01]    [2.01e-04, 6.02e-03, 1.44e+00, 6.40e-01, 8.90e-01, 1.18e-01]    []  
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-13 02:08:57.432293: I tensorflow/compiler/xla/stream_executor/cuda/cuda_blas.cc:630] TensorFloat-32 will be used for the matrix multiplication. This will only be logged once.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5000      [7.43e-06, 2.88e-06, 8.33e-07, 2.55e-07, 2.41e-06, 1.48e-06]    [7.43e-06, 2.88e-06, 8.33e-07, 2.55e-07, 2.41e-06, 1.48e-06]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1000      [4.41e-03, 5.35e-03, 5.27e-05, 2.32e-07, 1.68e-03, 6.62e-04]    [4.41e-03, 5.35e-03, 5.27e-05, 2.32e-07, 1.68e-03, 6.62e-04]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>10000     [3.78e-05, 6.10e-06, 5.19e-07, 7.50e-08, 5.25e-05, 2.57e-05]    [3.78e-05, 6.10e-06, 5.19e-07, 7.50e-08, 5.25e-05, 2.57e-05]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2000      [2.37e-04, 1.84e-04, 1.09e-08, 5.55e-06, 6.18e-05, 2.07e-04]    [2.37e-04, 1.84e-04, 1.09e-08, 5.55e-06, 6.18e-05, 2.07e-04]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>15000     [6.91e-06, 3.86e-06, 8.01e-07, 4.08e-08, 3.56e-05, 8.49e-06]    [6.91e-06, 3.86e-06, 8.01e-07, 4.08e-08, 3.56e-05, 8.49e-06]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>3000      [3.55e-05, 6.82e-06, 6.05e-07, 2.26e-06, 9.42e-06, 9.17e-06]    [3.55e-05, 6.82e-06, 6.05e-07, 2.26e-06, 9.42e-06, 9.17e-06]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>20000     [5.43e-06, 1.45e-06, 1.55e-07, 2.35e-07, 2.89e-06, 3.84e-06]    [5.43e-06, 1.45e-06, 1.55e-07, 2.35e-07, 2.89e-06, 3.84e-06]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4000      [6.02e-06, 5.13e-06, 1.49e-06, 2.31e-08, 8.84e-06, 2.36e-06]    [6.02e-06, 5.13e-06, 1.49e-06, 2.31e-08, 8.84e-06, 2.36e-06]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>25000     [2.19e-05, 9.96e-06, 1.92e-09, 1.59e-07, 1.88e-04, 5.26e-05]    [2.19e-05, 9.96e-06, 1.92e-09, 1.59e-07, 1.88e-04, 5.26e-05]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5000      [1.98e-05, 3.26e-05, 1.22e-05, 5.80e-07, 1.07e-04, 7.20e-06]    [1.98e-05, 3.26e-05, 1.22e-05, 5.80e-07, 1.07e-04, 7.20e-06]    []  
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>6000      [1.32e-05, 5.88e-06, 3.65e-06, 1.59e-06, 5.97e-05, 1.38e-05]    [1.32e-05, 5.88e-06, 3.65e-06, 1.59e-06, 5.97e-05, 1.38e-05]    []  
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>7000      [1.74e-03, 3.57e-04, 2.53e-04, 1.48e-04, 3.18e-04, 7.35e-04]    [1.74e-03, 3.57e-04, 2.53e-04, 1.48e-04, 3.18e-04, 7.35e-04]    []  
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>8000      [5.24e-05, 6.24e-05, 6.55e-05, 1.52e-05, 2.67e-04, 2.98e-05]    [5.24e-05, 6.24e-05, 6.55e-05, 1.52e-05, 2.67e-04, 2.98e-05]    []  
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>9000      [4.05e-06, 2.17e-06, 1.93e-07, 7.14e-07, 2.22e-06, 2.51e-06]    [4.05e-06, 2.17e-06, 1.93e-07, 7.14e-07, 2.22e-06, 2.51e-06]    []  
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>10000     [2.58e-05, 3.72e-06, 1.58e-07, 4.50e-06, 2.26e-05, 1.83e-05]    [2.58e-05, 3.72e-06, 1.58e-07, 4.50e-06, 2.26e-05, 1.83e-05]    []  
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>11000     [3.14e-05, 6.19e-06, 3.80e-08, 6.31e-07, 8.87e-06, 1.14e-05]    [3.14e-05, 6.19e-06, 3.80e-08, 6.31e-07, 8.87e-06, 1.14e-05]    []  
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>12000     [3.38e-05, 1.62e-05, 6.60e-06, 1.92e-07, 8.08e-05, 1.73e-05]    [3.38e-05, 1.62e-05, 6.60e-06, 1.92e-07, 8.08e-05, 1.73e-05]    []  
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>13000     [1.25e-05, 5.29e-06, 6.10e-06, 2.49e-06, 5.23e-06, 1.08e-05]    [1.25e-05, 5.29e-06, 6.10e-06, 2.49e-06, 5.23e-06, 1.08e-05]    []  
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>14000     [2.44e-06, 4.02e-06, 2.49e-06, 9.68e-08, 4.84e-06, 3.64e-06]    [2.44e-06, 4.02e-06, 2.49e-06, 9.68e-08, 4.84e-06, 3.64e-06]    []  
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>15000     [6.49e-05, 9.84e-06, 2.86e-06, 7.32e-06, 4.09e-05, 2.67e-05]    [6.49e-05, 9.84e-06, 2.86e-06, 7.32e-06, 4.09e-05, 2.67e-05]    []  
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>16000     [1.34e-05, 2.66e-06, 4.12e-06, 1.94e-06, 5.20e-05, 2.06e-05]    [1.34e-05, 2.66e-06, 4.12e-06, 1.94e-06, 5.20e-05, 2.06e-05]    []  
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>17000     [8.56e-06, 2.95e-06, 2.56e-08, 2.11e-06, 6.08e-06, 4.76e-06]    [8.56e-06, 2.95e-06, 2.56e-08, 2.11e-06, 6.08e-06, 4.76e-06]    []  
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>18000     [1.61e-05, 4.54e-06, 1.27e-06, 1.21e-05, 1.11e-05, 6.92e-06]    [1.61e-05, 4.54e-06, 1.27e-06, 1.21e-05, 1.11e-05, 6.92e-06]    []  
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>19000     [4.75e-06, 3.60e-06, 3.73e-06, 8.90e-07, 9.44e-06, 4.54e-06]    [4.75e-06, 3.60e-06, 3.73e-06, 8.90e-07, 9.44e-06, 4.54e-06]    []  
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>20000     [1.40e-06, 1.34e-06, 1.78e-09, 1.05e-07, 2.06e-06, 1.74e-06]    [1.40e-06, 1.34e-06, 1.78e-09, 1.05e-07, 2.06e-06, 1.74e-06]    []  
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>21000     [1.70e-05, 4.31e-06, 8.10e-08, 6.12e-06, 5.48e-05, 1.90e-05]    [1.70e-05, 4.31e-06, 8.10e-08, 6.12e-06, 5.48e-05, 1.90e-05]    []  
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>22000     [2.48e-05, 3.58e-06, 2.27e-06, 1.45e-06, 1.89e-05, 2.29e-05]    [2.48e-05, 3.58e-06, 2.27e-06, 1.45e-06, 1.89e-05, 2.29e-05]    []  
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>23000     [1.75e-05, 3.37e-06, 1.30e-06, 9.39e-07, 1.47e-06, 6.64e-06]    [1.75e-05, 3.37e-06, 1.30e-06, 9.39e-07, 1.47e-06, 6.64e-06]    []  
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>24000     [5.26e-05, 9.89e-06, 3.58e-06, 8.61e-07, 5.50e-06, 2.00e-05]    [5.26e-05, 9.89e-06, 3.58e-06, 8.61e-07, 5.50e-06, 2.00e-05]    []  
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>25000     [1.17e-06, 9.76e-07, 3.93e-09, 4.26e-07, 7.86e-06, 1.30e-06]    [1.17e-06, 9.76e-07, 3.93e-09, 4.26e-07, 7.86e-06, 1.30e-06]    []  
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>26000     [3.49e-06, 2.88e-06, 3.19e-06, 4.46e-07, 2.73e-05, 4.15e-06]    [3.49e-06, 2.88e-06, 3.19e-06, 4.46e-07, 2.73e-05, 4.15e-06]    []  
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>27000     [1.07e-06, 1.01e-06, 2.34e-07, 5.58e-07, 5.02e-06, 1.47e-06]    [1.07e-06, 1.01e-06, 2.34e-07, 5.58e-07, 5.02e-06, 1.47e-06]    []  
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>28000     [1.23e-06, 1.66e-06, 9.13e-08, 2.04e-07, 2.37e-06, 2.13e-06]    [1.23e-06, 1.66e-06, 9.13e-08, 2.04e-07, 2.37e-06, 2.13e-06]    []  
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>29000     [1.09e-06, 1.22e-06, 6.46e-06, 1.05e-06, 5.27e-06, 1.50e-06]    [1.09e-06, 1.22e-06, 6.46e-06, 1.05e-06, 5.27e-06, 1.50e-06]    []  
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>30000     [7.53e-06, 2.78e-06, 1.66e-07, 1.01e-06, 2.12e-05, 1.16e-05]    [7.53e-06, 2.78e-06, 1.66e-07, 1.01e-06, 2.12e-05, 1.16e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>30000     [3.93e-06, 2.60e-06, 6.21e-07, 1.15e-07, 1.72e-05, 8.20e-06]    [3.93e-06, 2.60e-06, 6.21e-07, 1.15e-07, 1.72e-05, 8.20e-06]    []  
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Best model at step 20000:
-  train loss: 6.65e-06
-  test loss: 6.65e-06
+  train loss: 1.40e-05
+  test loss: 1.40e-05
   test metric: []
 
-&#39;train&#39; took 42.087818 s
+&#39;train&#39; took 41.538149 s
 </pre></div>
 </div>
 </div>
@@ -817,7 +747,7 @@ Training model...
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/f47b6bef793531413c016f61d1b680095bc646eea6757ea7d09c8440d1fde9ba.png" src="../_images/f47b6bef793531413c016f61d1b680095bc646eea6757ea7d09c8440d1fde9ba.png" />
+<img alt="../_images/40ecc07e3171d18ad3f984d9664e36c755bcfa7ffe3da9dc36a90042059584cc.png" src="../_images/40ecc07e3171d18ad3f984d9664e36c755bcfa7ffe3da9dc36a90042059584cc.png" />
 </div>
 </div>
 <p>We can plot the data as well but it is not the main point of this lesson.</p>
@@ -839,7 +769,7 @@ Training model...
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/33e9ab64cf21fe639eca90bec59fa814ce86d3dd18296fdd5ac9ffc72f6eb90b.png" src="../_images/33e9ab64cf21fe639eca90bec59fa814ce86d3dd18296fdd5ac9ffc72f6eb90b.png" />
+<img alt="../_images/5fd0ed89b07377894668d9749086454e4bcb645eb73a9205dab725abee3b9f1d.png" src="../_images/5fd0ed89b07377894668d9749086454e4bcb645eb73a9205dab725abee3b9f1d.png" />
 </div>
 </div>
 </section>
@@ -889,7 +819,7 @@ Training model...
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/f5e1da348b0b045f5ce29b55db836bf94ec31d1cd17c47fece3477cf91421429.png" src="../_images/f5e1da348b0b045f5ce29b55db836bf94ec31d1cd17c47fece3477cf91421429.png" />
+<img alt="../_images/a8c17fa8c29ff6b82e467113be14477c364b4f22b7b25b28ea2b261a8c34d274.png" src="../_images/a8c17fa8c29ff6b82e467113be14477c364b4f22b7b25b28ea2b261a8c34d274.png" />
 </div>
 </div>
 <p>It took less than 5000 iterations to get a really good approximation for each variable! Now we can calculate the relative error for each parameter since we already know the real value.</p>
@@ -905,10 +835,10 @@ Training model...
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>alpha - real: 0.666667 - predicted: 0.665099 - relative error: 0.002351
-beta - real: 1.333333 - predicted: 1.330124 - relative error: 0.002407
-gamma - real: 1.000000 - predicted: 0.999321 - relative error: 0.000679
-delta - real: 1.000000 - predicted: 0.998082 - relative error: 0.001918
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>alpha - real: 0.666667 - predicted: 0.664998 - relative error: 0.002504
+beta - real: 1.333333 - predicted: 1.330000 - relative error: 0.002500
+gamma - real: 1.000000 - predicted: 0.999116 - relative error: 0.000884
+delta - real: 1.000000 - predicted: 0.997946 - relative error: 0.002054
 </pre></div>
 </div>
 </div>
@@ -952,6 +882,15 @@ delta - real: 1.000000 - predicted: 0.998082 - relative error: 0.001918
         <p class="prev-next-subtitle">previous</p>
         <p class="prev-next-title">System of Equations</p>
       </div>
+    </a>
+    <a class="right-next"
+       href="sird.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Application to Disease Dynamics</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
