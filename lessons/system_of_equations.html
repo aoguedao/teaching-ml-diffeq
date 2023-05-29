@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>System of Equations &#8212; A Literate Programming approach for motivating and teaching machine learning approaches to solve differential equations</title>
+    <title>System of Differential Equations &#8212; A Literate Programming approach for motivating and teaching machine learning approaches to solve differential equations</title>
   
   
   
@@ -68,7 +68,7 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Parameter Estimation" href="parameter_estimation.html" />
-    <link rel="prev" title="Numerical Solutions" href="numerical_solutions.html" />
+    <link rel="prev" title="Motivation for Differential Equations" href="motivation_differential_equations.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -160,9 +160,8 @@ const thebe_selector_output = ".output, .cell_output"
             </li>
         </ul>
         <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="motivation_differential_equations.html">Differential Equations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="numerical_solutions.html">Numerical Solutions</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">System of Equations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="motivation_differential_equations.html">Motivation for Differential Equations</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">System of Differential Equations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parameter_estimation.html">Parameter Estimation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sird.html">Application to Disease Dynamics</a></li>
 </ul>
@@ -379,7 +378,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>System of Equations</h1>
+    <h1>System of Differential Equations</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -389,16 +388,15 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#runge-kutta">Runge-Kutta</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#physics-informed-neural-networks">Physics-Informed Neural Networks</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pinns-solving-odes">PINNs solving ODEs</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-packages">Import packages</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pinns-for-solving-odes">PINNs for solving ODEs</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ode-residuals">ODE Residuals</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#initial-conditions">Initial conditions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-object">Data object</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#neural-network">Neural Network</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model">Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model-object">Model Object</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training">Training</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#compare">Compare</a></li>
 </ul>
             </nav>
         </div>
@@ -410,15 +408,23 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="system-of-equations">
-<h1>System of Equations<a class="headerlink" href="#system-of-equations" title="Permalink to this heading">#</a></h1>
-<p>Let’s motivate this section with  the <strong>Lotka-Volterra equations</strong>, also known as the predator-prey equations, are a pair of first-order nonlinear differential equations, frequently used to describe the dynamics of biological systems in which two species interact. The populations change through time according to the pair of equations:</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}
-\dfrac{dx}{dt} = \alpha x - \beta xy \\
-\dfrac{dy}{dt} = -\gamma y + \delta xy
-\end{split}\]</div>
-<p>where</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="system-of-differential-equations">
+<h1>System of Differential Equations<a class="headerlink" href="#system-of-differential-equations" title="Permalink to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># !pip install deepxde  # Run this line if you are in Google Colab</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s motivate this section with  the <strong>Lotka-Volterra equations</strong>, also known as the predator-prey equations, are a pair of first-order nonlinear differential equations, frequently used to describe the dynamics of biological systems in which two species interact. The populations change through time according to the pair of equations:
+$<span class="math notranslate nohighlight">\(
+\begin{align*}
+    \dfrac{dx}{dt} &amp;= \alpha x - \beta xy \\
+    \dfrac{dy}{dt} &amp;= -\gamma y + \delta xy
+\end{align*}
+\)</span>$
+where</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(x\)</span> is the number of prey;</p></li>
 <li><p><span class="math notranslate nohighlight">\(y\)</span> is the number of some predator;</p></li>
@@ -426,18 +432,104 @@ document.write(`
 <li><p><span class="math notranslate nohighlight">\(t\)</span> represents time;</p></li>
 <li><p><span class="math notranslate nohighlight">\(\alpha\)</span>, <span class="math notranslate nohighlight">\(\beta\)</span>, <span class="math notranslate nohighlight">\(\gamma\)</span> and <span class="math notranslate nohighlight">\(\delta\)</span> are positive real parameters describing the interaction of the two species.</p></li>
 </ul>
+<p>We will need the following packages, <code class="docutils literal notranslate"><span class="pre">numpy</span></code> for array operations, <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> for visualizations and <code class="docutils literal notranslate"><span class="pre">scipy</span></code> for getting for getting a numerical solution with Runge-Kutta method.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">solve_ivp</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>For this module we will use the following values of  <span class="math notranslate nohighlight">\(\alpha\)</span>, <span class="math notranslate nohighlight">\(\beta\)</span>, <span class="math notranslate nohighlight">\(\gamma\)</span> and <span class="math notranslate nohighlight">\(\delta\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">alpha</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span>
+<span class="n">beta</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">/</span> <span class="mi">3</span>
+<span class="n">gamma</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">delta</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>It is important to decide a time invertal where we will working on. As an example let’s consider between <span class="math notranslate nohighlight">\(t=0\)</span> and <span class="math notranslate nohighlight">\(t=1\)</span>. As well as initial conditions <span class="math notranslate nohighlight">\(x(0)\)</span> and <span class="math notranslate nohighlight">\(y(0)\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t_initial</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">t_final</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="n">x0</span> <span class="o">=</span> <span class="mf">1.2</span>
+<span class="n">y0</span> <span class="o">=</span> <span class="mf">0.8</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="runge-kutta">
+<h2>Runge-Kutta<a class="headerlink" href="#runge-kutta" title="Permalink to this heading">#</a></h2>
+<p>Note we can modularize this step creating a function, for instance, <code class="docutils literal notranslate"><span class="pre">runge_kutta</span></code> which takes as input an array of time steps, initial conditions and the values of the parameters that describe the interaction between the two species.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">runge_kutta</span><span class="p">(</span>
+    <span class="n">t</span><span class="p">,</span>
+    <span class="n">x0</span><span class="p">,</span>
+    <span class="n">y0</span><span class="p">,</span>
+    <span class="n">alpha</span><span class="p">,</span>
+    <span class="n">beta</span><span class="p">,</span>
+    <span class="n">gamma</span><span class="p">,</span>
+    <span class="n">delta</span>
+<span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">Y</span><span class="p">):</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">Y</span>
+        <span class="n">dx_dt</span> <span class="o">=</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">x</span> <span class="o">-</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span>
+        <span class="n">dy_dt</span> <span class="o">=</span> <span class="o">-</span> <span class="n">gamma</span> <span class="o">*</span> <span class="n">y</span>  <span class="o">+</span> <span class="n">delta</span> <span class="o">*</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span>
+        <span class="k">return</span> <span class="n">dx_dt</span><span class="p">,</span> <span class="n">dy_dt</span>
+
+    <span class="n">Y0</span> <span class="o">=</span> <span class="p">[</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">]</span>
+    <span class="n">t_span</span> <span class="o">=</span> <span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">t</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">sol</span> <span class="o">=</span> <span class="n">solve_ivp</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">t_span</span><span class="p">,</span> <span class="n">Y0</span><span class="p">,</span> <span class="n">t_eval</span><span class="o">=</span><span class="n">t</span><span class="p">)</span>
+    <span class="n">x_true</span><span class="p">,</span> <span class="n">y_true</span> <span class="o">=</span> <span class="n">sol</span><span class="o">.</span><span class="n">y</span>
+    <span class="k">return</span> <span class="n">x_true</span><span class="p">,</span> <span class="n">y_true</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now, let’s generate an time array and solve the initial value problem.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">t_initial</span><span class="p">,</span> <span class="n">t_final</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">x_rungekutta</span><span class="p">,</span> <span class="n">y_rungekutta</span> <span class="o">=</span> <span class="n">runge_kutta</span><span class="p">(</span><span class="n">t_array</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">delta</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We suggest you to plot your results since it can give you better insights of your simulations or predictions.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_array</span><span class="p">,</span> <span class="n">x_rungekutta</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;x_runge_kutta&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_array</span><span class="p">,</span> <span class="n">y_rungekutta</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;y_runge_kutta&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/90b14b3b98e1a1e0713d762de6da9ae07d0209a4fbd121dad76e3546034f564b.png" src="../_images/90b14b3b98e1a1e0713d762de6da9ae07d0209a4fbd121dad76e3546034f564b.png" />
+</div>
+</div>
+</section>
 <section id="physics-informed-neural-networks">
 <h2>Physics-Informed Neural Networks<a class="headerlink" href="#physics-informed-neural-networks" title="Permalink to this heading">#</a></h2>
-<p>For years mathematicians and physicists are trying to model the world with differential equations. However, since the advent of techniques such as machine learning, neural networks and deep learning together with greater computing power, community has speculated that we could learn automatically (algorithms) anything with a enough amount of data. However, it seems this is not really true.</p>
-<p>Philosophical Question: Could have a <em>machine</em> discovered Newton’s laws?</p>
-<p>In 2019, Raissi, Perdikaris and Karniadakis introduced Physics-Informed Neural Networks (PINNs), neural networks that are trained to solve supervised learning tasks while respecting any given law of physics described by general nonlinear partial differential equations (<a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0021999118307125">source</a>). PINNs are nowadays used to solve PDEs, fractional equations, and integral-differential equations.</p>
-<p>PINNs approximate PDE solutions by training a neural network to minimize a loss function, including:</p>
+<p>For years mathematicians and physicists are trying to model the world with differential equations. However, since the advent of techniques such as machine learning, neural networks and deep learning together with greater computing power, community has speculated that we could learn automatically (algorithms) anything with a enough amount of data. However, it seems this is not really true.
+In 2019, Raissi, Perdikaris and Karniadakis introduced Physics-Informed Neural Networks (PINNs), neural networks that are trained to solve supervised learning tasks while respecting any given law of physics described by general nonlinear partial differential equations (<a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0021999118307125">source</a>). PINNs are nowadays used to solve PDEs, fractional equations, and integral-differential equations.
+PINNs approximate PDE solutions by training a neural network to minimize a loss function, including:</p>
 <ul class="simple">
 <li><p>Initial and boundary conditions along the space-time domain’s boundary</p></li>
 <li><p>PDE residual at selected points in the domain.</p></li>
 </ul>
-<p>If you want to do a simplified analogy, initial and boundary conditions points will be an usual training dataset, but also it is necessary to embed physical laws (PDE) into the neural network.</p>
-<p>PINNs can solve differential equations expressed, in the most general form, like:</p>
+<p>If you want to do a simplified analogy, initial and boundary conditions points will be an usual training dataset, but also it is necessary to embed physical laws (PDE) into the neural network.
+PINNs can solve differential equations expressed, in the most general form, like:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
 \begin{align*}
@@ -455,7 +547,7 @@ document.write(`
 <li><p><span class="math notranslate nohighlight">\(\mathcal{B}\)</span> the operator indicating arbitrary initial or boundary conditions, and</p></li>
 <li><p><span class="math notranslate nohighlight">\(g\)</span> the boundary function.</p></li>
 </ul>
-<p>In the PINN methodology, <span class="math notranslate nohighlight">\(u(z)\)</span> is computationally predicted by a NN, parametrized by a set of parameters <span class="math notranslate nohighlight">\(\theta\)</span>, giving rise to an approximation
+<p>In the PINN methodology, <span class="math notranslate nohighlight">\(u(z)\)</span> is computationally predicted by a NN, parameterized by a set of parameters <span class="math notranslate nohighlight">\(\theta\)</span>, giving rise to an approximation
 $<span class="math notranslate nohighlight">\(
 \hat{u}_\theta(z) \approx u(z)
 \)</span>$</p>
@@ -473,8 +565,8 @@ $<span class="math notranslate nohighlight">\(
 <p><img alt="PINNs" src="https://media.springernature.com/full/springer-static/image/art%3A10.1007%2Fs10915-022-01939-z/MediaObjects/10915_2022_1939_Fig2_HTML.png?as=webp" /></p>
 <p><a class="reference external" href="https://link.springer.com/article/10.1007/s10915-022-01939-z">Source</a></p>
 </section>
-<section id="pinns-solving-odes">
-<h2>PINNs solving ODEs<a class="headerlink" href="#pinns-solving-odes" title="Permalink to this heading">#</a></h2>
+<section id="pinns-for-solving-odes">
+<h2>PINNs for solving ODEs<a class="headerlink" href="#pinns-for-solving-odes" title="Permalink to this heading">#</a></h2>
 <p>For our Lotka-Volterra system the solution <span class="math notranslate nohighlight">\(u\)</span> will be a vector such that
 $<span class="math notranslate nohighlight">\(
 u(t) = (x(t), y(t))^\top
@@ -482,24 +574,10 @@ u(t) = (x(t), y(t))^\top
 and there are not boundary conditions, only initial conditions.</p>
 <p>We want to train a network that looks like this</p>
 <p><img alt="lotka_volterra_pinn" src="../_images/lotka_volterra_pinn.png" /></p>
-</section>
-<section id="import-packages">
-<h2>Import packages<a class="headerlink" href="#import-packages" title="Permalink to this heading">#</a></h2>
-<p>The most important package is <code class="docutils literal notranslate"><span class="pre">deepxde</span></code>, which allows us to implement Physic-Informed Neural Networs approaches with a few lines of code. We will need <code class="docutils literal notranslate"><span class="pre">numpy</span></code> for array operations, <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> for visualizations and <code class="docutils literal notranslate"><span class="pre">scipy</span></code> for getting the real solution (which is not always possible, if not we would only use this approach).</p>
+<p>The most important package is <code class="docutils literal notranslate"><span class="pre">deepxde</span></code>, which allows us to implement Physic-Informed Neural Networks approaches with a few lines of code.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># !pip install deepxde  # Run this line if you are in Google Colab</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">deepxde</span> <span class="k">as</span> <span class="nn">dde</span>
-
-<span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">solve_ivp</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">deepxde</span> <span class="k">as</span> <span class="nn">dde</span>
 <span class="kn">from</span> <span class="nn">deepxde.backend</span> <span class="kn">import</span> <span class="n">tf</span>
 </pre></div>
 </div>
@@ -508,14 +586,14 @@ and there are not boundary conditions, only initial conditions.</p>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Using backend: tensorflow.compat.v1
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-15 17:03:29.541770: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F AVX512_VNNI AVX512_BF16 FMA
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-05-29 15:08:22.805541: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F AVX512_VNNI AVX512_BF16 FMA
 To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
-2023-03-15 17:03:29.617000: I tensorflow/core/util/port.cc:104] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2023-05-29 15:08:22.876404: I tensorflow/core/util/port.cc:104] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-15 17:03:29.947743: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#39;libnvinfer.so.7&#39;; dlerror: libnvinfer.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: :/home/alonsolml/mambaforge/envs/nc-book/lib/
-2023-03-15 17:03:29.949567: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#39;libnvinfer_plugin.so.7&#39;; dlerror: libnvinfer_plugin.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: :/home/alonsolml/mambaforge/envs/nc-book/lib/
-2023-03-15 17:03:29.949575: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Cannot dlopen some TensorRT libraries. If you would like to use Nvidia GPU with TensorRT, please make sure the missing libraries mentioned above are installed properly.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-05-29 15:08:23.242926: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#39;libnvinfer.so.7&#39;; dlerror: libnvinfer.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: :/home/alonsolml/mambaforge/envs/nc-book/lib/
+2023-05-29 15:08:23.244527: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#39;libnvinfer_plugin.so.7&#39;; dlerror: libnvinfer_plugin.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: :/home/alonsolml/mambaforge/envs/nc-book/lib/
+2023-05-29 15:08:23.244535: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Cannot dlopen some TensorRT libraries. If you would like to use Nvidia GPU with TensorRT, please make sure the missing libraries mentioned above are installed properly.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:tensorflow:From /home/alonsolml/mambaforge/envs/nc-book/lib/python3.10/site-packages/tensorflow/python/compat/v2_compat.py:107: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
@@ -526,11 +604,11 @@ non-resource variables are not supported in the long term
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Enable just-in-time compilation with XLA.
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-15 17:03:30.492747: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-05-29 15:08:23.905929: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
-2023-03-15 17:03:30.505549: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+2023-05-29 15:08:23.918928: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
-2023-03-15 17:03:30.505584: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+2023-05-29 15:08:23.918972: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
 </pre></div>
 </div>
@@ -543,16 +621,6 @@ Your kernel may have been built without NUMA support.
 <section id="ode-residuals">
 <h2>ODE Residuals<a class="headerlink" href="#ode-residuals" title="Permalink to this heading">#</a></h2>
 <p>Since we are trying to embed the physics onto the neural networks we need to define</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">alpha</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span>
-<span class="n">beta</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">/</span> <span class="mi">3</span>
-<span class="n">gamma</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="n">delta</span> <span class="o">=</span> <span class="mi">1</span>
-</pre></div>
-</div>
-</div>
-</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">ode</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">Y</span><span class="p">):</span>
@@ -574,15 +642,6 @@ Your kernel may have been built without NUMA support.
 </section>
 <section id="initial-conditions">
 <h2>Initial conditions<a class="headerlink" href="#initial-conditions" title="Permalink to this heading">#</a></h2>
-<p>It is important to decide a time invertal where we will working on. As an example let’s consider between <span class="math notranslate nohighlight">\(t=0\)</span> and <span class="math notranslate nohighlight">\(t=1\)</span>.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t_initial</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">t_final</span> <span class="o">=</span> <span class="mi">10</span>
-</pre></div>
-</div>
-</div>
-</div>
 <p>And now we need to declare this element for our neural network, if not, the algorithm wouldn’t know where to make the estimations.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -596,15 +655,6 @@ Your kernel may have been built without NUMA support.
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">boundary</span><span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">on_initial</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">on_initial</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>Let’s choose initial conditions for <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span></p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x0</span> <span class="o">=</span> <span class="mf">1.2</span>
-<span class="n">y0</span> <span class="o">=</span> <span class="mf">0.8</span>
 </pre></div>
 </div>
 </div>
@@ -657,8 +707,8 @@ Your kernel may have been built without NUMA support.
 </div>
 </div>
 </section>
-<section id="model">
-<h2>Model<a class="headerlink" href="#model" title="Permalink to this heading">#</a></h2>
+<section id="model-object">
+<h2>Model Object<a class="headerlink" href="#model-object" title="Permalink to this heading">#</a></h2>
 <p>The library we are working with needs put everything together in a new object, but it is just one line of code.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -682,79 +732,79 @@ Your kernel may have been built without NUMA support.
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Compiling model...
 Building feed-forward neural network...
-&#39;build&#39; took 0.038718 s
+&#39;build&#39; took 0.040949 s
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/alonsolml/mambaforge/envs/nc-book/lib/python3.10/site-packages/deepxde/nn/tensorflow_compat_v1/fnn.py:103: UserWarning: `tf.layers.dense` is deprecated and will be removed in a future version. Please use `tf.keras.layers.Dense` instead.
   return tf.layers.dense(
-2023-03-15 17:03:31.112195: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F AVX512_VNNI AVX512_BF16 FMA
+2023-05-29 15:08:24.653036: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F AVX512_VNNI AVX512_BF16 FMA
 To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
-2023-03-15 17:03:31.113722: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+2023-05-29 15:08:24.653995: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
-2023-03-15 17:03:31.113768: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+2023-05-29 15:08:24.654116: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
-2023-03-15 17:03:31.113804: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+2023-05-29 15:08:24.654181: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-15 17:03:31.719430: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-05-29 15:08:25.093244: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
-2023-03-15 17:03:31.719496: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+2023-05-29 15:08:25.093508: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
-2023-03-15 17:03:31.719502: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1700] Could not identify NUMA node of platform GPU id 0, defaulting to 0.  Your kernel may not have been built with NUMA support.
-2023-03-15 17:03:31.719526: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+2023-05-29 15:08:25.093517: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1700] Could not identify NUMA node of platform GPU id 0, defaulting to 0.  Your kernel may not have been built with NUMA support.
+2023-05-29 15:08:25.093553: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
-2023-03-15 17:03:31.719534: W tensorflow/core/common_runtime/gpu/gpu_bfc_allocator.cc:42] Overriding orig_value setting because the TF_FORCE_GPU_ALLOW_GROWTH environment variable is set. Original config value was 0.
-2023-03-15 17:03:31.719552: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1613] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 7369 MB memory:  -&gt; device: 0, name: NVIDIA GeForce RTX 3080, pci bus id: 0000:01:00.0, compute capability: 8.6
+2023-05-29 15:08:25.093564: W tensorflow/core/common_runtime/gpu/gpu_bfc_allocator.cc:42] Overriding orig_value setting because the TF_FORCE_GPU_ALLOW_GROWTH environment variable is set. Original config value was 0.
+2023-05-29 15:08:25.093584: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1613] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 7369 MB memory:  -&gt; device: 0, name: NVIDIA GeForce RTX 3080, pci bus id: 0000:01:00.0, compute capability: 8.6
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;compile&#39; took 0.907843 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;compile&#39; took 0.711830 s
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Initializing variables...
 Training model...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-15 17:03:31.990821: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:357] MLIR V1 optimization pass is not enabled
-2023-03-15 17:03:32.058263: I tensorflow/compiler/xla/service/service.cc:173] XLA service 0x7fc2d00054d0 initialized for platform CUDA (this does not guarantee that XLA will be used). Devices:
-2023-03-15 17:03:32.058295: I tensorflow/compiler/xla/service/service.cc:181]   StreamExecutor device (0): NVIDIA GeForce RTX 3080, Compute Capability 8.6
-2023-03-15 17:03:32.063068: I tensorflow/compiler/mlir/tensorflow/utils/dump_mlir_util.cc:268] disabling MLIR crash reproducer, set env var `MLIR_CRASH_REPRODUCER_DIRECTORY` to enable.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-05-29 15:08:25.329737: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:357] MLIR V1 optimization pass is not enabled
+2023-05-29 15:08:25.401502: I tensorflow/compiler/xla/service/service.cc:173] XLA service 0x7fc90c00d960 initialized for platform CUDA (this does not guarantee that XLA will be used). Devices:
+2023-05-29 15:08:25.401537: I tensorflow/compiler/xla/service/service.cc:181]   StreamExecutor device (0): NVIDIA GeForce RTX 3080, Compute Capability 8.6
+2023-05-29 15:08:25.405898: I tensorflow/compiler/mlir/tensorflow/utils/dump_mlir_util.cc:268] disabling MLIR crash reproducer, set env var `MLIR_CRASH_REPRODUCER_DIRECTORY` to enable.
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-15 17:03:32.221889: I tensorflow/tsl/platform/default/subprocess.cc:304] Start cannot spawn child process: Permission denied
-2023-03-15 17:03:32.310326: I tensorflow/compiler/jit/xla_compilation_cache.cc:477] Compiled cluster using XLA!  This line is logged at most once for the lifetime of the process.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-05-29 15:08:25.559289: I tensorflow/tsl/platform/default/subprocess.cc:304] Start cannot spawn child process: Permission denied
+2023-05-29 15:08:25.632490: I tensorflow/compiler/jit/xla_compilation_cache.cc:477] Compiled cluster using XLA!  This line is logged at most once for the lifetime of the process.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Step      Train loss                                  Test loss                                   Test metric
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0         [6.21e-04, 2.51e-01, 1.44e+00, 6.40e-01]    [6.21e-04, 2.51e-01, 1.44e+00, 6.40e-01]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0         [9.65e-04, 5.28e-02, 1.44e+00, 6.40e-01]    [9.65e-04, 5.28e-02, 1.44e+00, 6.40e-01]    []  
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-15 17:03:32.729102: I tensorflow/compiler/xla/stream_executor/cuda/cuda_blas.cc:630] TensorFloat-32 will be used for the matrix multiplication. This will only be logged once.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-05-29 15:08:26.030817: I tensorflow/compiler/xla/stream_executor/cuda/cuda_blas.cc:630] TensorFloat-32 will be used for the matrix multiplication. This will only be logged once.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>10000     [1.49e-05, 7.10e-06, 5.33e-06, 5.56e-06]    [1.49e-05, 7.10e-06, 5.33e-06, 5.56e-06]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>10000     [8.89e-03, 2.23e-03, 2.29e-05, 1.08e-04]    [8.89e-03, 2.23e-03, 2.29e-05, 1.08e-04]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>20000     [6.30e-06, 2.13e-06, 6.77e-11, 2.86e-06]    [6.30e-06, 2.13e-06, 6.77e-11, 2.86e-06]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>20000     [1.37e-05, 4.01e-06, 3.52e-07, 1.26e-06]    [1.37e-05, 4.01e-06, 3.52e-07, 1.26e-06]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>30000     [1.46e-06, 4.47e-07, 9.04e-07, 2.49e-10]    [1.46e-06, 4.47e-07, 9.04e-07, 2.49e-10]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>30000     [2.22e-05, 8.82e-06, 3.31e-06, 2.08e-06]    [2.22e-05, 8.82e-06, 3.31e-06, 2.08e-06]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>40000     [2.01e-06, 3.75e-06, 4.26e-06, 4.46e-07]    [2.01e-06, 3.75e-06, 4.26e-06, 4.46e-07]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>40000     [1.32e-04, 9.52e-06, 1.45e-06, 4.53e-06]    [1.32e-04, 9.52e-06, 1.45e-06, 4.53e-06]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>50000     [1.26e-05, 1.24e-06, 2.09e-08, 4.80e-07]    [1.26e-05, 1.24e-06, 2.09e-08, 4.80e-07]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>50000     [4.34e-06, 1.70e-06, 4.41e-07, 1.91e-07]    [4.34e-06, 1.70e-06, 4.41e-07, 1.91e-07]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Best model at step 30000:
-  train loss: 2.81e-06
-  test loss: 2.81e-06
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Best model at step 50000:
+  train loss: 6.67e-06
+  test loss: 6.67e-06
   test metric: []
 
-&#39;train&#39; took 62.728575 s
+&#39;train&#39; took 65.769597 s
 </pre></div>
 </div>
 </div>
@@ -767,64 +817,44 @@ Training model...
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/973c3ec60518d3a35c46f7382502b94b4f129f4d196db1f565ba47a7d32ab5e7.png" src="../_images/973c3ec60518d3a35c46f7382502b94b4f129f4d196db1f565ba47a7d32ab5e7.png" />
+<img alt="../_images/93361d5de4f15f9bb284fc1d44d137b29e3aafeb4567a1ada65382763c0f3268.png" src="../_images/93361d5de4f15f9bb284fc1d44d137b29e3aafeb4567a1ada65382763c0f3268.png" />
 </div>
 </div>
-</section>
-<section id="compare">
-<h2>Compare<a class="headerlink" href="#compare" title="Permalink to this heading">#</a></h2>
-<p>Now it is time to compare our model. We chose the Lotka-Volterra because we can obtain the solution with a Runge-Kuta algorithm, for instance, we used <code class="docutils literal notranslate"><span class="pre">solve_ivp</span></code> from <code class="docutils literal notranslate"><span class="pre">scipy</span></code>.</p>
+<p>Now, the prediction with PINNs</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">generate_data</span><span class="p">(</span>
-    <span class="n">t</span><span class="p">,</span>
-    <span class="n">x0</span><span class="p">,</span>
-    <span class="n">y0</span><span class="p">,</span>
-    <span class="n">alpha</span><span class="p">,</span>
-    <span class="n">beta</span><span class="p">,</span>
-    <span class="n">gamma</span><span class="p">,</span>
-    <span class="n">delta</span>
-<span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pinn_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">t_array</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">x_pinn</span> <span class="o">=</span> <span class="n">pinn_pred</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">y_pinn</span> <span class="o">=</span> <span class="n">pinn_pred</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">Y</span><span class="p">):</span>
-        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">Y</span>
-        <span class="n">dx_dt</span> <span class="o">=</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">x</span> <span class="o">-</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span>
-        <span class="n">dy_dt</span> <span class="o">=</span> <span class="o">-</span> <span class="n">gamma</span> <span class="o">*</span> <span class="n">y</span>  <span class="o">+</span> <span class="n">delta</span> <span class="o">*</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span>
-        <span class="k">return</span> <span class="n">dx_dt</span><span class="p">,</span> <span class="n">dy_dt</span>
-
-    <span class="n">Y0</span> <span class="o">=</span> <span class="p">[</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">]</span>
-    <span class="n">t_span</span> <span class="o">=</span> <span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">t</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-    <span class="n">sol</span> <span class="o">=</span> <span class="n">solve_ivp</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">t_span</span><span class="p">,</span> <span class="n">Y0</span><span class="p">,</span> <span class="n">t_eval</span><span class="o">=</span><span class="n">t</span><span class="p">)</span>
-    <span class="n">x_true</span><span class="p">,</span> <span class="n">y_true</span> <span class="o">=</span> <span class="n">sol</span><span class="o">.</span><span class="n">y</span>
-    <span class="k">return</span> <span class="n">x_true</span><span class="p">,</span> <span class="n">y_true</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>Let’s generate a fine grid of time, generate data with Runge-Kuta and then compare both approaches in the same plot.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">t_initial</span><span class="p">,</span> <span class="n">t_final</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
-<span class="n">x_true</span><span class="p">,</span> <span class="n">y_true</span> <span class="o">=</span> <span class="n">generate_data</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">delta</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">x_true</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;x_true&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">y_true</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;y_true&quot;</span><span class="p">)</span>
-
-<span class="n">sol_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
-<span class="n">x_pred</span> <span class="o">=</span> <span class="n">sol_pred</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">]</span>
-<span class="n">y_pred</span> <span class="o">=</span> <span class="n">sol_pred</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
-
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">x_pred</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;dashed&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;x_pred&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;orange&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;dashed&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;y_pred&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_array</span><span class="p">,</span> <span class="n">x_pinn</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;x_pinn&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_array</span><span class="p">,</span> <span class="n">y_pinn</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;y_pinn&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/4bbb0eef7d40c3c6a7102869680a56a83d4da3da195ac1e83da6a308db10854e.png" src="../_images/4bbb0eef7d40c3c6a7102869680a56a83d4da3da195ac1e83da6a308db10854e.png" />
+<img alt="../_images/ade27c2f2e2ce4a7af923668077980d9436c328215d1e6182ae84788de804901.png" src="../_images/ade27c2f2e2ce4a7af923668077980d9436c328215d1e6182ae84788de804901.png" />
 </div>
 </div>
 <p>As you can see both algorithms gave us almost identical results. One of the pros that we would like to point out about Physics-Informed neural networks is that for more complex systems you only need to change a very few things more, specifically residuals. Most of the numerical work is done automatically by machine learning libraries as <code class="docutils literal notranslate"><span class="pre">TensorFlow</span></code>, <code class="docutils literal notranslate"><span class="pre">Torch</span></code>, <code class="docutils literal notranslate"><span class="pre">JAX</span></code>, etc. so it is easy to scale it up, even better when we can take advantage of GPUs. For you, as an user, your challenge will be in pick suitable hyper-parameters (number of layers, number of neurons, activation function, number of iterations, etc.) but this also could be done by other algorithms, however these are out of the scope of this lesson.</p>
+<p>Finally, we can compare both models and notice they are practically the same curves.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_array</span><span class="p">,</span> <span class="n">x_rungekutta</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;x_runge_kutta&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_array</span><span class="p">,</span> <span class="n">y_rungekutta</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;y_runge_kutta&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_array</span><span class="p">,</span> <span class="n">x_pinn</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;dashed&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;x_pinn&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_array</span><span class="p">,</span> <span class="n">y_pinn</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;orange&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;dashed&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;y_pinn&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/fca2e4671968b97b5f7a58673747cb53d91dc77e518c4c408f4b730117b83944.png" src="../_images/fca2e4671968b97b5f7a58673747cb53d91dc77e518c4c408f4b730117b83944.png" />
+</div>
+</div>
 </section>
 </section>
 
@@ -857,12 +887,12 @@ Training model...
                   <!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
-       href="numerical_solutions.html"
+       href="motivation_differential_equations.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Numerical Solutions</p>
+        <p class="prev-next-title">Motivation for Differential Equations</p>
       </div>
     </a>
     <a class="right-next"
@@ -889,16 +919,15 @@ Training model...
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#runge-kutta">Runge-Kutta</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#physics-informed-neural-networks">Physics-Informed Neural Networks</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pinns-solving-odes">PINNs solving ODEs</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-packages">Import packages</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pinns-for-solving-odes">PINNs for solving ODEs</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ode-residuals">ODE Residuals</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#initial-conditions">Initial conditions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-object">Data object</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#neural-network">Neural Network</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model">Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model-object">Model Object</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training">Training</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#compare">Compare</a></li>
 </ul>
   </nav></div>
 

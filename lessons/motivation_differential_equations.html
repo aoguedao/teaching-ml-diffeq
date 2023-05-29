@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Differential Equations &#8212; A Literate Programming approach for motivating and teaching machine learning approaches to solve differential equations</title>
+    <title>Motivation for Differential Equations &#8212; A Literate Programming approach for motivating and teaching machine learning approaches to solve differential equations</title>
   
   
   
@@ -67,7 +67,7 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Numerical Solutions" href="numerical_solutions.html" />
+    <link rel="next" title="System of Differential Equations" href="system_of_equations.html" />
     <link rel="prev" title="A Literate Programming approach for motivating and teaching machine learning approaches to solve differential equations" href="../index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -160,9 +160,8 @@ const thebe_selector_output = ".output, .cell_output"
             </li>
         </ul>
         <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Differential Equations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="numerical_solutions.html">Numerical Solutions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="system_of_equations.html">System of Equations</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Motivation for Differential Equations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="system_of_equations.html">System of Differential Equations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parameter_estimation.html">Parameter Estimation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sird.html">Application to Disease Dynamics</a></li>
 </ul>
@@ -379,7 +378,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Differential Equations</h1>
+    <h1>Motivation for Differential Equations</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -389,7 +388,8 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#some-examples">Some examples</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#general-equation">General equation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#numerical-methods">Numerical methods</a></li>
 </ul>
             </nav>
         </div>
@@ -401,10 +401,9 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="differential-equations">
-<h1>Differential Equations<a class="headerlink" href="#differential-equations" title="Permalink to this heading">#</a></h1>
-<p>An equation involving one dependent variable and its derivatives with respect to one or more independent variables is called a <em>differential equation</em>.
-Many of the general laws of nature—in physics, chemistry, biology, and astronomy—find their most natural expression in the language of differential equations. Applications also abound in mathematics itself, especially in geometry, and in engineering, economics, and many other fields of applied science {cite}’simmons2016differential’.</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="motivation-for-differential-equations">
+<h1>Motivation for Differential Equations<a class="headerlink" href="#motivation-for-differential-equations" title="Permalink to this heading">#</a></h1>
+<p>An equation involving one dependent variable and its derivatives with respect to one or more independent variables is called a <em>differential equation</em>. Many of the general laws of nature—in physics, chemistry, biology, and astronomy—find their most natural expression in the language of differential equations. Applications also abound in mathematics itself, especially in geometry, and in engineering, economics, and many other fields of applied science {cite}’simmons2016differential’.</p>
 <p>At the beginning of our mathematical education we learned how to deal with simple equations such as</p>
 <div class="math notranslate nohighlight">
 \[
@@ -412,8 +411,6 @@ Many of the general laws of nature—in physics, chemistry, biology, and astrono
 \]</div>
 <p>and how to solve them (yep, the answer is <span class="math notranslate nohighlight">\(x=3\)</span>). But later we realized the solution of a equation could be not unique or even it could not exist. In these kind of equation we wanted to find the value of <span class="math notranslate nohighlight">\(x\)</span>, a number. Now we will try to extend this to equations where we need to find a <strong>function</strong> <span class="math notranslate nohighlight">\(f(x)\)</span>. Just like <span class="math notranslate nohighlight">\(2x\)</span> or <span class="math notranslate nohighlight">\(\cos(x)\)</span> are operations we applied on <span class="math notranslate nohighlight">\(x\)</span>, we can think that <span class="math notranslate nohighlight">\(2 f(x)\)</span> and <span class="math notranslate nohighlight">\(\cos(f(x))\)</span> are applied on <span class="math notranslate nohighlight">\(f(x)\)</span>. However, we will be interested in equations involving the derivatives of <span class="math notranslate nohighlight">\(f(x)\)</span>.</p>
 <p>You will recall that if <span class="math notranslate nohighlight">\(y=f(x)\)</span> is a given function, then its derivative <span class="math notranslate nohighlight">\(dy/dx\)</span> can be interpreted as the rate of change of <span class="math notranslate nohighlight">\(y\)</span> with respect to $$. In any natural process, the variables involved and their rates of change are connected with one another by means of the basic scientific principles that govern the process. When this connection is expressed in mathematical symbols, the result is often a differential equation.</p>
-<section id="some-examples">
-<h2>Some examples<a class="headerlink" href="#some-examples" title="Permalink to this heading">#</a></h2>
 <p>Just for listing a few examples of differential equations:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
@@ -422,22 +419,126 @@ m\frac{d^2 y}{dt^2} = -k y\\
 \frac{dy}{dx} + 2xy = e^{-x^2}\\
 \frac{d^2y}{dx^2} - 5 \frac{dy}{dx} + 6y = 0\\
 \end{split}\]</div>
-<p>where the dependent variable in each of these equations is <span class="math notranslate nohighlight">\(y\)</span>, and the independent variable is either <span class="math notranslate nohighlight">\(t\)</span> or <span class="math notranslate nohighlight">\(x\)</span>. The letters <span class="math notranslate nohighlight">\(k\)</span> and <span class="math notranslate nohighlight">\(m\)</span> represent constants (usually associated a some physical phenomenom).</p>
+<p>where the dependent variable in each of these equations is <span class="math notranslate nohighlight">\(y\)</span>, and the independent variable is either <span class="math notranslate nohighlight">\(t\)</span> or <span class="math notranslate nohighlight">\(x\)</span>. The letters <span class="math notranslate nohighlight">\(k\)</span> and <span class="math notranslate nohighlight">\(m\)</span> represent constants (usually associated a some physical phenomenon).</p>
+<section id="general-equation">
+<h2>General equation<a class="headerlink" href="#general-equation" title="Permalink to this heading">#</a></h2>
 <p>An <strong>ordinary differential equation</strong> is one in which there is only one independent variable, so that all the derivatives occurring in it are ordinary derivatives.</p>
-<p>The <strong>order</strong> of a differential equation is the order of the highest derivative present.</p>
-<p>A general ordinary differential equation of <span class="math notranslate nohighlight">\(n\)</span>-th order can be written as</p>
+<p>The <strong>order</strong> of a differential equation is the order of the highest derivative present.
+A general ordinary differential equation of <span class="math notranslate nohighlight">\(n\)</span>-th order can be written as</p>
 <div class="math notranslate nohighlight">
 \[
 F\left( x, y, \frac{dy}{dx}, \frac{d^2y}{dx^2}, \ldots, \frac{d^n y}{dx^n} \right) = 0
 \]</div>
-<p>where <span class="math notranslate nohighlight">\(F\)</span> is just an operator. Any adequate theoretical discussion of this equation would have to be based on a careful study of explicitly assumed properties of the function <span class="math notranslate nohighlight">\(F\)</span>.</p>
-<p>Consider the equation</p>
+<p>where <span class="math notranslate nohighlight">\(F\)</span> is just an operator. Any adequate theoretical discussion of this equation would have to be based on a careful study of explicitly assumed properties of the function <span class="math notranslate nohighlight">\(F\)</span>.
+Consider the equation</p>
 <div class="math notranslate nohighlight">
 \[
 \frac{dy}{dx} = 2 y,
 \]</div>
 <p>it is simple to verify that the function <span class="math notranslate nohighlight">\(y = e^{2x}\)</span> it is a solution. The problem of starting with a differential equation and finding a solution is naturally much more difficult.</p>
-<p>There are several solving methods for different types of ordinary differential equations, most of them covered in books. However, sometimes it is hard to find an analytical solution and then it is necesarry to apply numerical methods. Next lessons will include examples of numerical applications on ordinary differential equations.</p>
+<p>There are several solving methods for different types of ordinary differential equations, most of them covered in books. However, sometimes it is hard to find an analytical solution and then it is necessary to apply numerical methods. Next lessons will include examples of numerical applications on ordinary differential equations.</p>
+</section>
+<section id="numerical-methods">
+<h2>Numerical methods<a class="headerlink" href="#numerical-methods" title="Permalink to this heading">#</a></h2>
+<p>Often we can’t find an analytical solution, therefore there are some classic approaches for finding numerical solutions.</p>
+<p>Single-step Runge–Kutta methods associate a function <span class="math notranslate nohighlight">\(\Phi(t, y, h)\)</span> which requires (possibly repeated) function evaluations of <span class="math notranslate nohighlight">\(f(t, y)\)</span> but not its derivatives.</p>
+<p>In general, single-step Runge–Kutta methods have the form:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+y_0 = y(a) \\
+y_{k+1} = y_k + h \Phi(t_k ,y_k, h)
+\end{split}\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\Phi(t_k ,y_k, h) = \sum_{r=1}^R c_r K_r, \\
+K_1 = f(t, y), \\
+K_r = f(t + a_r h, y + h \sum_{s=1}^{r-1}b_{rs} K_s), \\
+a_r = \sum_{s=1}^{r-1}b_{rs}, \qquad r=2, 3, \ldots, R
+\end{split}\]</div>
+<p>The most well-known Runge–Kutta scheme (from elementary numerical analysis texts) is 4-th order; it has the
+form:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+y_0 = y(t_0) \\
+y_{k+1} = y_k + \frac{h}{6} \left[ K_1 + 2 K_2 + 2 K_3 + K4 \right] \\
+K_1 = f(t_k, y_k) \\
+K_2 = f\left(t_k + \frac{h}{2}, y_k + \frac{h}{2} K_1 \right) \\
+K_3 = f\left(t_k + \frac{h}{2}, y_k + \frac{h}{2} K_2 \right) \\
+K_4 = f(t_k + h, y_k + h K_3)
+\end{split}\]</div>
+<p>i.e.,
+$<span class="math notranslate nohighlight">\(
+\Phi(t_k, y_k, h) = \frac{h}{6} \left[ K_1 + 2 K_2 + 2 K_3 + K4 \right]
+\)</span>$</p>
+<p>Let’s consider the following initial value problem</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+y^\prime(t) = \frac{t}{9} \cos(2y) + t^2 \\
+y(0) = 1
+\end{split}\]</div>
+<p>We need a package for scientific computing (<code class="docutils literal notranslate"><span class="pre">numpy</span></code>), plotting (<code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>) and a tool for solving initial values problems with Runge-Kuta methods (<code class="docutils literal notranslate"><span class="pre">scipy.integrate.solve_ivp</span></code>).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">solve_ivp</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>First of all, you need to define a function which takes as arguments <span class="math notranslate nohighlight">\(t\)</span> and <span class="math notranslate nohighlight">\(y\)</span> and returns the right side of the equation. In this case,
+$<span class="math notranslate nohighlight">\(
+f(t, y) = \frac{t}{9} \cos(2y) + t^2
+\)</span>$</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">t</span> <span class="o">/</span> <span class="mi">9</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">y</span><span class="p">)</span> <span class="o">+</span> <span class="n">t</span> <span class="o">**</span> <span class="mi">2</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now, we need to define the domain where we will solve the equation. Since our initial condition is in <span class="math notranslate nohighlight">\(t_0=0\)</span> our domain must include it. And consider, just as an example, the final time as <span class="math notranslate nohighlight">\(t_n = 10\)</span> and <span class="math notranslate nohighlight">\(h=0.5\)</span> (later you can try smaller values!).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t0</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">tn</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">h</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">t_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">t0</span><span class="p">,</span> <span class="n">tn</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
+<span class="n">t_array</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0. , 0.5, 1. , 1.5, 2. , 2.5, 3. , 3.5, 4. , 4.5, 5. , 5.5, 6. ,
+       6.5, 7. , 7.5, 8. , 8.5, 9. , 9.5])
+</pre></div>
+</div>
+</div>
+</div>
+<p>Note that <code class="docutils literal notranslate"><span class="pre">solve_ivp</span></code> function only needs <span class="math notranslate nohighlight">\(f(t, y)\)</span>, a time span (<code class="docutils literal notranslate"><span class="pre">t_span</span></code>) and initial conditions (<code class="docutils literal notranslate"><span class="pre">y_0</span></code>), however, we can include the points where the solution we will be evaluate with <code class="docutils literal notranslate"><span class="pre">t_eval</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sol</span> <span class="o">=</span> <span class="n">solve_ivp</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">t_span</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="n">y0</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">t_eval</span><span class="o">=</span><span class="n">t_array</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Finally, you can get the solution points with <code class="docutils literal notranslate"><span class="pre">sol.y</span></code> but for plotting we need a flat array (just use <code class="docutils literal notranslate"><span class="pre">.flatten()</span></code> method).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">y_sol</span> <span class="o">=</span> <span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_array</span><span class="p">,</span> <span class="n">y_sol</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;dashed&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/ef00522c415eb4825b8a9d8f7d55582b314470c660ea72e96e3807ad5b61c343.png" src="../_images/ef00522c415eb4825b8a9d8f7d55582b314470c660ea72e96e3807ad5b61c343.png" />
+</div>
+</div>
 </section>
 </section>
 
@@ -479,11 +580,11 @@ F\left( x, y, \frac{dy}{dx}, \frac{d^2y}{dx^2}, \ldots, \frac{d^n y}{dx^n} \righ
       </div>
     </a>
     <a class="right-next"
-       href="numerical_solutions.html"
+       href="system_of_equations.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Numerical Solutions</p>
+        <p class="prev-next-title">System of Differential Equations</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -502,7 +603,8 @@ F\left( x, y, \frac{dy}{dx}, \frac{d^2y}{dx^2}, \ldots, \frac{d^n y}{dx^n} \righ
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#some-examples">Some examples</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#general-equation">General equation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#numerical-methods">Numerical methods</a></li>
 </ul>
   </nav></div>
 

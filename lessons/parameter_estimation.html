@@ -68,7 +68,7 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Application to Disease Dynamics" href="sird.html" />
-    <link rel="prev" title="System of Equations" href="system_of_equations.html" />
+    <link rel="prev" title="System of Differential Equations" href="system_of_equations.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -160,9 +160,8 @@ const thebe_selector_output = ".output, .cell_output"
             </li>
         </ul>
         <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="motivation_differential_equations.html">Differential Equations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="numerical_solutions.html">Numerical Solutions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="system_of_equations.html">System of Equations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="motivation_differential_equations.html">Motivation for Differential Equations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="system_of_equations.html">System of Differential Equations</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Parameter Estimation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sird.html">Application to Disease Dynamics</a></li>
 </ul>
@@ -389,10 +388,10 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#train-data">Train Data</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pinn">PINN</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training-data">Training Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pinns-data-driven-discovery">PINNs Data-Driven Discovery</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training">Training</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-history">Learning history</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-history">Learning History</a></li>
 </ul>
             </nav>
         </div>
@@ -406,13 +405,12 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="parameter-estimation">
 <h1>Parameter Estimation<a class="headerlink" href="#parameter-estimation" title="Permalink to this heading">#</a></h1>
-<p>Now, let’s consider another scenario. Imagine another researcher sampled data every day, <span class="math notranslate nohighlight">\(x_{observed} = (x(t_1), x(t_2) , \ldots, x(t_n))\)</span> and <span class="math notranslate nohighlight">\(y_{observed} = (y(t_1), y(t_2) , \ldots, y(t_n))\)</span> where <span class="math notranslate nohighlight">\(t_1, t_2, \ldots, t_n\)</span> represents time. The goal here is to determine the best values <span class="math notranslate nohighlight">\(\alpha\)</span>, <span class="math notranslate nohighlight">\(\beta\)</span>, <span class="math notranslate nohighlight">\(\gamma\)</span> and <span class="math notranslate nohighlight">\(\delta\)</span> for this sampled data.</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}
+<p>Now, let’s consider another scenario. Imagine another researcher sampled data every day, <span class="math notranslate nohighlight">\(x_{observed} = (x(t_1), x(t_2) , \ldots, x(t_n))\)</span> and <span class="math notranslate nohighlight">\(y_{observed} = (y(t_1), y(t_2) , \ldots, y(t_n))\)</span> where <span class="math notranslate nohighlight">\(t_1, t_2, \ldots, t_n\)</span> represents time. The goal here is to determine the best values <span class="math notranslate nohighlight">\(\alpha\)</span>, <span class="math notranslate nohighlight">\(\beta\)</span>, <span class="math notranslate nohighlight">\(\gamma\)</span> and <span class="math notranslate nohighlight">\(\delta\)</span> for this sampled data.
+$<span class="math notranslate nohighlight">\(
 \dfrac{dx}{dt} = \alpha x - \beta xy \\
 \dfrac{dy}{dt} = -\gamma y + \delta xy
-\end{split}\]</div>
-<p>This is called an <em>Inverse Problem</em> but some authors also called this sort of approaches as <em>Data-Driven Discovery</em>. We will use PINNs for this purpose and you will notice we only need to add some extra features compared to the last lesson.</p>
+\)</span>$
+This is called an <em>Inverse Problem</em> but some authors also called this sort of approaches as <em>Data-Driven Discovery</em>. We will use PINNs for this purpose and you will notice we only need to add some extra features compared to the last lesson.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
@@ -429,14 +427,16 @@ document.write(`
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Using backend: tensorflow.compat.v1
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-15 17:02:00.781979: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F AVX512_VNNI AVX512_BF16 FMA
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-05-29 15:06:47.897341: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F AVX512_VNNI AVX512_BF16 FMA
 To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
-2023-03-15 17:02:00.863505: I tensorflow/core/util/port.cc:104] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-15 17:02:01.305637: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#39;libnvinfer.so.7&#39;; dlerror: libnvinfer.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: :/home/alonsolml/mambaforge/envs/nc-book/lib/
-2023-03-15 17:02:01.307236: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#39;libnvinfer_plugin.so.7&#39;; dlerror: libnvinfer_plugin.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: :/home/alonsolml/mambaforge/envs/nc-book/lib/
-2023-03-15 17:02:01.307241: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Cannot dlopen some TensorRT libraries. If you would like to use Nvidia GPU with TensorRT, please make sure the missing libraries mentioned above are installed properly.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-05-29 15:06:48.118069: I tensorflow/core/util/port.cc:104] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-05-29 15:06:48.918396: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#39;libnvinfer.so.7&#39;; dlerror: libnvinfer.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: :/home/alonsolml/mambaforge/envs/nc-book/lib/
+2023-05-29 15:06:48.920012: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#39;libnvinfer_plugin.so.7&#39;; dlerror: libnvinfer_plugin.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: :/home/alonsolml/mambaforge/envs/nc-book/lib/
+2023-05-29 15:06:48.920018: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Cannot dlopen some TensorRT libraries. If you would like to use Nvidia GPU with TensorRT, please make sure the missing libraries mentioned above are installed properly.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:tensorflow:From /home/alonsolml/mambaforge/envs/nc-book/lib/python3.10/site-packages/tensorflow/python/compat/v2_compat.py:107: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
@@ -447,11 +447,11 @@ non-resource variables are not supported in the long term
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Enable just-in-time compilation with XLA.
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-15 17:02:01.889565: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-05-29 15:06:50.021137: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
-2023-03-15 17:02:01.911908: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+2023-05-29 15:06:50.056924: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
-2023-03-15 17:02:01.911943: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+2023-05-29 15:06:50.056966: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
 </pre></div>
 </div>
@@ -460,8 +460,8 @@ Your kernel may have been built without NUMA support.
 </div>
 </div>
 </div>
-<section id="train-data">
-<h2>Train Data<a class="headerlink" href="#train-data" title="Permalink to this heading">#</a></h2>
+<section id="training-data">
+<h2>Training Data<a class="headerlink" href="#training-data" title="Permalink to this heading">#</a></h2>
 <p>The train data will be generated by ourserlves, so we will have a better understading of the error. Let’s choose a time interval, initial conditions and parameters.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -484,7 +484,7 @@ Your kernel may have been built without NUMA support.
 </div>
 </div>
 </div>
-<p>We can use the same approach than last lesson for generate synthetic data</p>
+<p>We can use a similar approach than last module for generate synthetic data, this will allows us to study errors.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">generate_data</span><span class="p">(</span>
@@ -512,17 +512,13 @@ Your kernel may have been built without NUMA support.
 </div>
 </div>
 </div>
+<p>Generate the synthetic data and plot it.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">t_initial</span><span class="p">,</span> <span class="n">t_final</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">Y_train</span> <span class="o">=</span> <span class="n">generate_data</span><span class="p">(</span><span class="n">t_train</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">alpha_real</span><span class="p">,</span> <span class="n">beta_real</span><span class="p">,</span> <span class="n">gamma_real</span><span class="p">,</span> <span class="n">delta_real</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x_train</span> <span class="o">=</span> <span class="n">Y_train</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="n">x_train</span> <span class="o">=</span> <span class="n">Y_train</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">]</span>
 <span class="n">y_train</span> <span class="o">=</span> <span class="n">Y_train</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">t_train</span><span class="p">,</span> <span class="n">x_train</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;x_observed&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">t_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;y_observed&quot;</span><span class="p">)</span>
@@ -537,9 +533,9 @@ Your kernel may have been built without NUMA support.
 </div>
 </div>
 </section>
-<section id="pinn">
-<h2>PINN<a class="headerlink" href="#pinn" title="Permalink to this heading">#</a></h2>
-<p>Now we will <em>forget</em> for a minute about the real values of <span class="math notranslate nohighlight">\(\alpha\)</span>, <span class="math notranslate nohighlight">\(\beta\)</span>, <span class="math notranslate nohighlight">\(\gamma\)</span> and <span class="math notranslate nohighlight">\(\delta\)</span> since the goal of this lesson is to learn how to estime these parameters. Let’s start defining them in a way that our code knows they have to be learned.</p>
+<section id="pinns-data-driven-discovery">
+<h2>PINNs Data-Driven Discovery<a class="headerlink" href="#pinns-data-driven-discovery" title="Permalink to this heading">#</a></h2>
+<p>Now we will <em>forget</em> for a minute about the real values of <span class="math notranslate nohighlight">\(\alpha\)</span>, <span class="math notranslate nohighlight">\(\beta\)</span>, <span class="math notranslate nohighlight">\(\gamma\)</span> and <span class="math notranslate nohighlight">\(\delta\)</span> since the goal of this lesson is to learn how to estimate these parameters. Let’s start defining them in a way that our code knows they have to be learned.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Pick some initial guess</span>
@@ -552,7 +548,7 @@ Your kernel may have been built without NUMA support.
 </div>
 </div>
 </div>
-<p>Now we have to define the residuals and initial conditions in the same way the forward approximation (previous lesson).</p>
+<p>Now we have to define the residuals and initial conditions in the same way the forward approximation (previous module).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">ode</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">Y</span><span class="p">):</span>
@@ -569,6 +565,7 @@ Your kernel may have been built without NUMA support.
 </div>
 </div>
 </div>
+<p>And also geometry and initial conditions</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">geom</span> <span class="o">=</span> <span class="n">dde</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">TimeDomain</span><span class="p">(</span><span class="n">t_initial</span><span class="p">,</span> <span class="n">t_final</span><span class="p">)</span>
@@ -638,38 +635,38 @@ Your kernel may have been built without NUMA support.
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Compiling model...
 Warning: For the backend tensorflow.compat.v1, `external_trainable_variables` is ignored, and all trainable ``tf.Variable`` objects are automatically collected.
 Building feed-forward neural network...
-&#39;build&#39; took 0.035927 s
+&#39;build&#39; took 0.043011 s
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/alonsolml/mambaforge/envs/nc-book/lib/python3.10/site-packages/deepxde/nn/tensorflow_compat_v1/fnn.py:103: UserWarning: `tf.layers.dense` is deprecated and will be removed in a future version. Please use `tf.keras.layers.Dense` instead.
   return tf.layers.dense(
-2023-03-15 17:02:02.593871: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F AVX512_VNNI AVX512_BF16 FMA
+2023-05-29 15:06:51.032478: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F AVX512_VNNI AVX512_BF16 FMA
 To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
-2023-03-15 17:02:02.594887: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+2023-05-29 15:06:51.033856: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
-2023-03-15 17:02:02.594933: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+2023-05-29 15:06:51.033911: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
-2023-03-15 17:02:02.594964: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+2023-05-29 15:06:51.033942: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-15 17:02:03.525029: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-05-29 15:06:51.843256: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
-2023-03-15 17:02:03.525307: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+2023-05-29 15:06:51.843943: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
-2023-03-15 17:02:03.525315: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1700] Could not identify NUMA node of platform GPU id 0, defaulting to 0.  Your kernel may not have been built with NUMA support.
-2023-03-15 17:02:03.525342: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+2023-05-29 15:06:51.843966: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1700] Could not identify NUMA node of platform GPU id 0, defaulting to 0.  Your kernel may not have been built with NUMA support.
+2023-05-29 15:06:51.844002: I tensorflow/compiler/xla/stream_executor/cuda/cuda_gpu_executor.cc:967] could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
 Your kernel may have been built without NUMA support.
-2023-03-15 17:02:03.525366: W tensorflow/core/common_runtime/gpu/gpu_bfc_allocator.cc:42] Overriding orig_value setting because the TF_FORCE_GPU_ALLOW_GROWTH environment variable is set. Original config value was 0.
-2023-03-15 17:02:03.525406: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1613] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 7369 MB memory:  -&gt; device: 0, name: NVIDIA GeForce RTX 3080, pci bus id: 0000:01:00.0, compute capability: 8.6
+2023-05-29 15:06:51.844016: W tensorflow/core/common_runtime/gpu/gpu_bfc_allocator.cc:42] Overriding orig_value setting because the TF_FORCE_GPU_ALLOW_GROWTH environment variable is set. Original config value was 0.
+2023-05-29 15:06:51.844075: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1613] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 7369 MB memory:  -&gt; device: 0, name: NVIDIA GeForce RTX 3080, pci bus id: 0000:01:00.0, compute capability: 8.6
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;compile&#39; took 1.186177 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;compile&#39; took 1.173493 s
 </pre></div>
 </div>
 </div>
 </div>
-<p>In order to study the convergence of the learning process related to the parameters we want to estimate we need a separete file where we can store these estimations. The file <code class="docutils literal notranslate"><span class="pre">variables.dat</span></code> will store ours estimations of <span class="math notranslate nohighlight">\(\alpha\)</span>, <span class="math notranslate nohighlight">\(\beta\)</span>, <span class="math notranslate nohighlight">\(\gamma\)</span> and <span class="math notranslate nohighlight">\(\delta\)</span> each 100 iterations.</p>
+<p>In order to study the convergence of the learning process related to the parameters we want to estimate we need a separate file where we can store these estimations. The file <code class="docutils literal notranslate"><span class="pre">variables.dat</span></code> will store ours estimations of <span class="math notranslate nohighlight">\(\alpha\)</span>, <span class="math notranslate nohighlight">\(\beta\)</span>, <span class="math notranslate nohighlight">\(\gamma\)</span> and <span class="math notranslate nohighlight">\(\delta\)</span> each 100 iterations.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">variable</span> <span class="o">=</span> <span class="n">dde</span><span class="o">.</span><span class="n">callbacks</span><span class="o">.</span><span class="n">VariableValue</span><span class="p">(</span>
@@ -685,6 +682,7 @@ Your kernel may have been built without NUMA support.
 <div class="cell tag_output_scroll docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">losshistory</span><span class="p">,</span> <span class="n">train_state</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">iterations</span><span class="o">=</span><span class="mi">30000</span><span class="p">,</span> <span class="n">display_every</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">variable</span><span class="p">])</span>
+<span class="n">dde</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">external</span><span class="o">.</span><span class="n">plot_loss_history</span><span class="p">(</span><span class="n">losshistory</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -693,61 +691,52 @@ Your kernel may have been built without NUMA support.
 Training model...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-15 17:02:03.757272: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:357] MLIR V1 optimization pass is not enabled
-2023-03-15 17:02:03.823291: I tensorflow/compiler/xla/service/service.cc:173] XLA service 0x7fd414005840 initialized for platform CUDA (this does not guarantee that XLA will be used). Devices:
-2023-03-15 17:02:03.823318: I tensorflow/compiler/xla/service/service.cc:181]   StreamExecutor device (0): NVIDIA GeForce RTX 3080, Compute Capability 8.6
-2023-03-15 17:02:03.828466: I tensorflow/compiler/mlir/tensorflow/utils/dump_mlir_util.cc:268] disabling MLIR crash reproducer, set env var `MLIR_CRASH_REPRODUCER_DIRECTORY` to enable.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-05-29 15:06:52.181256: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:357] MLIR V1 optimization pass is not enabled
+2023-05-29 15:06:52.307510: I tensorflow/compiler/xla/service/service.cc:173] XLA service 0x7f3408005f60 initialized for platform CUDA (this does not guarantee that XLA will be used). Devices:
+2023-05-29 15:06:52.307575: I tensorflow/compiler/xla/service/service.cc:181]   StreamExecutor device (0): NVIDIA GeForce RTX 3080, Compute Capability 8.6
+2023-05-29 15:06:52.333523: I tensorflow/compiler/mlir/tensorflow/utils/dump_mlir_util.cc:268] disabling MLIR crash reproducer, set env var `MLIR_CRASH_REPRODUCER_DIRECTORY` to enable.
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-15 17:02:04.013126: I tensorflow/tsl/platform/default/subprocess.cc:304] Start cannot spawn child process: Permission denied
-2023-03-15 17:02:04.086472: I tensorflow/compiler/jit/xla_compilation_cache.cc:477] Compiled cluster using XLA!  This line is logged at most once for the lifetime of the process.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-05-29 15:06:52.670204: I tensorflow/tsl/platform/default/subprocess.cc:304] Start cannot spawn child process: Permission denied
+2023-05-29 15:06:52.786905: I tensorflow/compiler/jit/xla_compilation_cache.cc:477] Compiled cluster using XLA!  This line is logged at most once for the lifetime of the process.
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-03-15 17:02:04.462928: I tensorflow/compiler/xla/stream_executor/cuda/cuda_blas.cc:630] TensorFloat-32 will be used for the matrix multiplication. This will only be logged once.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-05-29 15:06:53.572711: I tensorflow/compiler/xla/stream_executor/cuda/cuda_blas.cc:630] TensorFloat-32 will be used for the matrix multiplication. This will only be logged once.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Step      Train loss                                                      Test loss                                                       Test metric
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0         [2.01e-04, 6.02e-03, 1.44e+00, 6.40e-01, 8.90e-01, 1.18e-01]    [2.01e-04, 6.02e-03, 1.44e+00, 6.40e-01, 8.90e-01, 1.18e-01]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0         [4.21e-03, 7.55e-05, 1.44e+00, 6.40e-01, 1.44e+00, 3.71e-01]    [4.21e-03, 7.55e-05, 1.44e+00, 6.40e-01, 1.44e+00, 3.71e-01]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5000      [7.43e-06, 2.88e-06, 8.33e-07, 2.55e-07, 2.41e-06, 1.48e-06]    [7.43e-06, 2.88e-06, 8.33e-07, 2.55e-07, 2.41e-06, 1.48e-06]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5000      [4.94e-06, 4.39e-06, 3.92e-09, 5.18e-09, 7.28e-06, 3.13e-06]    [4.94e-06, 4.39e-06, 3.92e-09, 5.18e-09, 7.28e-06, 3.13e-06]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>10000     [3.78e-05, 6.10e-06, 5.19e-07, 7.50e-08, 5.25e-05, 2.57e-05]    [3.78e-05, 6.10e-06, 5.19e-07, 7.50e-08, 5.25e-05, 2.57e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>10000     [1.65e-04, 3.03e-05, 9.21e-06, 1.01e-06, 1.18e-04, 6.22e-05]    [1.65e-04, 3.03e-05, 9.21e-06, 1.01e-06, 1.18e-04, 6.22e-05]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>15000     [6.91e-06, 3.86e-06, 8.01e-07, 4.08e-08, 3.56e-05, 8.49e-06]    [6.91e-06, 3.86e-06, 8.01e-07, 4.08e-08, 3.56e-05, 8.49e-06]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>15000     [2.32e-06, 2.47e-06, 1.64e-07, 8.56e-07, 5.56e-06, 1.83e-06]    [2.32e-06, 2.47e-06, 1.64e-07, 8.56e-07, 5.56e-06, 1.83e-06]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>20000     [5.43e-06, 1.45e-06, 1.55e-07, 2.35e-07, 2.89e-06, 3.84e-06]    [5.43e-06, 1.45e-06, 1.55e-07, 2.35e-07, 2.89e-06, 3.84e-06]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>20000     [1.67e-05, 2.35e-06, 2.66e-08, 5.26e-06, 2.30e-05, 1.76e-05]    [1.67e-05, 2.35e-06, 2.66e-08, 5.26e-06, 2.30e-05, 1.76e-05]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>25000     [2.19e-05, 9.96e-06, 1.92e-09, 1.59e-07, 1.88e-04, 5.26e-05]    [2.19e-05, 9.96e-06, 1.92e-09, 1.59e-07, 1.88e-04, 5.26e-05]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>25000     [1.42e-06, 1.38e-06, 2.70e-08, 2.94e-08, 2.10e-06, 1.10e-06]    [1.42e-06, 1.38e-06, 2.70e-08, 2.94e-08, 2.10e-06, 1.10e-06]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>30000     [3.93e-06, 2.60e-06, 6.21e-07, 1.15e-07, 1.72e-05, 8.20e-06]    [3.93e-06, 2.60e-06, 6.21e-07, 1.15e-07, 1.72e-05, 8.20e-06]    []  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>30000     [9.16e-06, 2.04e-06, 6.90e-08, 7.73e-07, 5.20e-05, 1.97e-05]    [9.16e-06, 2.04e-06, 6.90e-08, 7.73e-07, 5.20e-05, 1.97e-05]    []  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Best model at step 20000:
-  train loss: 1.40e-05
-  test loss: 1.40e-05
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Best model at step 25000:
+  train loss: 6.06e-06
+  test loss: 6.06e-06
   test metric: []
 
-&#39;train&#39; took 41.538149 s
+&#39;train&#39; took 41.995679 s
 </pre></div>
 </div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dde</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">external</span><span class="o">.</span><span class="n">plot_loss_history</span><span class="p">(</span><span class="n">losshistory</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../_images/40ecc07e3171d18ad3f984d9664e36c755bcfa7ffe3da9dc36a90042059584cc.png" src="../_images/40ecc07e3171d18ad3f984d9664e36c755bcfa7ffe3da9dc36a90042059584cc.png" />
+<img alt="../_images/9c4f3259a1cb4aea8e863765d66291d70d00b773f7f7614d7fece0f9c86ad53f.png" src="../_images/9c4f3259a1cb4aea8e863765d66291d70d00b773f7f7614d7fece0f9c86ad53f.png" />
 </div>
 </div>
 <p>We can plot the data as well but it is not the main point of this lesson.</p>
@@ -769,13 +758,13 @@ Training model...
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/5fd0ed89b07377894668d9749086454e4bcb645eb73a9205dab725abee3b9f1d.png" src="../_images/5fd0ed89b07377894668d9749086454e4bcb645eb73a9205dab725abee3b9f1d.png" />
+<img alt="../_images/74dc260f936959224e024e9c9de95fb5cf37d4ce28c30d8ca236932644279687.png" src="../_images/74dc260f936959224e024e9c9de95fb5cf37d4ce28c30d8ca236932644279687.png" />
 </div>
 </div>
 </section>
 <section id="learning-history">
-<h2>Learning history<a class="headerlink" href="#learning-history" title="Permalink to this heading">#</a></h2>
-<p>We need to open the file <code class="docutils literal notranslate"><span class="pre">variabled.dat</span></code> and create arrays for each parameter. Do not worry about the next piece of code, it will only return a dictionary where keys are the name of the parameters and values are their learning history.</p>
+<h2>Learning History<a class="headerlink" href="#learning-history" title="Permalink to this heading">#</a></h2>
+<p>We need to open the file <code class="docutils literal notranslate"><span class="pre">variables.dat</span></code> and create arrays for each parameter. Do not worry about the next piece of code, it will only return a dictionary where keys are the name of the parameters and values are their learning history.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lines</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;variables.dat&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
@@ -819,7 +808,7 @@ Training model...
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/a8c17fa8c29ff6b82e467113be14477c364b4f22b7b25b28ea2b261a8c34d274.png" src="../_images/a8c17fa8c29ff6b82e467113be14477c364b4f22b7b25b28ea2b261a8c34d274.png" />
+<img alt="../_images/5f6d5656eb911dc9e893f761ed3cf8e00d2e8a70143b2d4481c9802f0a723146.png" src="../_images/5f6d5656eb911dc9e893f761ed3cf8e00d2e8a70143b2d4481c9802f0a723146.png" />
 </div>
 </div>
 <p>It took less than 5000 iterations to get a really good approximation for each variable! Now we can calculate the relative error for each parameter since we already know the real value.</p>
@@ -835,10 +824,10 @@ Training model...
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>alpha - real: 0.666667 - predicted: 0.664998 - relative error: 0.002504
-beta - real: 1.333333 - predicted: 1.330000 - relative error: 0.002500
-gamma - real: 1.000000 - predicted: 0.999116 - relative error: 0.000884
-delta - real: 1.000000 - predicted: 0.997946 - relative error: 0.002054
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>alpha - real: 0.666667 - predicted: 0.665072 - relative error: 0.002392
+beta - real: 1.333333 - predicted: 1.330057 - relative error: 0.002457
+gamma - real: 1.000000 - predicted: 0.999335 - relative error: 0.000665
+delta - real: 1.000000 - predicted: 0.998157 - relative error: 0.001843
 </pre></div>
 </div>
 </div>
@@ -880,7 +869,7 @@ delta - real: 1.000000 - predicted: 0.997946 - relative error: 0.002054
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">System of Equations</p>
+        <p class="prev-next-title">System of Differential Equations</p>
       </div>
     </a>
     <a class="right-next"
@@ -907,10 +896,10 @@ delta - real: 1.000000 - predicted: 0.997946 - relative error: 0.002054
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#train-data">Train Data</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pinn">PINN</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training-data">Training Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pinns-data-driven-discovery">PINNs Data-Driven Discovery</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training">Training</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-history">Learning history</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-history">Learning History</a></li>
 </ul>
   </nav></div>
 
