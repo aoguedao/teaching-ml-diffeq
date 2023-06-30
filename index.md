@@ -1,4 +1,4 @@
-# A Literate Programming approach for motivating and teaching machine learning approaches to solve differential equations
+# Literate programming for motivating and teaching neural network based approaches to solve differential equations
 
 Authors: [Alonso G. Ogueda Oliva](https://aoguedao.github.io/) and [Padmanabhan (Padhu) Seshaiyer](https://math.gmu.edu/~pseshaiy/).
 
